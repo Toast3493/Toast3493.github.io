@@ -880,7 +880,7 @@
         border-color: #7864ff;
     }
 
-    /* ===== БЛОК ЧАТА ===== */
+    /* ===== БЛОК ЧАТА — БОЛЬШОЙ, РАСТЁТ ПО СОДЕРЖИМОМУ ===== */
     .chat-section {
         min-height: 100vh;
         padding: 120px 40px 80px;
@@ -903,8 +903,7 @@
         padding: 40px;
         border-radius: 30px;
         transition: all 0.6s ease;
-        height: calc(100vh - 160px);
-        max-height: 800px;
+        /* УБРАНА фиксированная высота — блок растёт по содержимому */
     }
 
     body.theme-light .chat-container {
@@ -930,7 +929,6 @@
         padding: 30px;
         border-radius: 20px;
         transition: all 0.6s ease;
-        overflow-y: auto;
     }
 
     body.theme-light .person-card {
@@ -951,7 +949,6 @@
         object-fit: cover;
         border: 4px solid;
         transition: all 0.6s ease;
-        flex-shrink: 0;
     }
 
     body.theme-light .person-photo {
@@ -995,20 +992,16 @@
         color: rgba(255, 255, 255, 0.6);
     }
 
-    /* Правая часть чата - фиксированная высота */
     .chat-right {
         display: flex;
         flex-direction: column;
-        height: 100%;
-        overflow: hidden;
     }
 
     .chat-header {
         font-size: 24px;
         font-weight: 700;
-        margin-bottom: 16px;
+        margin-bottom: 20px;
         transition: all 0.6s ease;
-        flex-shrink: 0;
     }
 
     body.theme-light .chat-header {
@@ -1026,8 +1019,7 @@
     }
 
     .message-input-wrapper {
-        margin-bottom: 16px;
-        flex-shrink: 0;
+        margin-bottom: 20px;
     }
 
     .message-input {
@@ -1077,8 +1069,7 @@
         border-radius: 12px;
         cursor: pointer;
         transition: all 0.3s ease;
-        margin-bottom: 16px;
-        flex-shrink: 0;
+        margin-bottom: 20px;
     }
 
     body.theme-light .btn-send {
@@ -1105,9 +1096,8 @@
 
     .messages-divider {
         height: 1px;
-        margin: 16px 0;
+        margin: 20px 0;
         transition: all 0.6s ease;
-        flex-shrink: 0;
     }
 
     body.theme-light .messages-divider {
@@ -1118,14 +1108,11 @@
         background: linear-gradient(90deg, transparent, rgba(120, 100, 255, 0.3), transparent);
     }
 
-    /* Список сообщений - ЕДИНСТВЕННЫЙ элемент со скроллом */
     .messages-list {
         flex: 1;
         overflow-y: auto;
-        overflow-x: hidden;
-        margin-bottom: 16px;
-        -webkit-overflow-scrolling: touch;
-        scroll-behavior: smooth;
+        padding-right: 10px;
+        margin-bottom: 20px;
     }
 
     .messages-list::-webkit-scrollbar {
@@ -1203,7 +1190,6 @@
         transition: all 0.3s ease;
         background: transparent;
         margin-bottom: 12px;
-        flex-shrink: 0;
     }
 
     body.theme-light .toggle-btn {
@@ -1321,7 +1307,6 @@
         opacity: 0;
     }
 
-    /* ===== ПЛАНШЕТЫ ===== */
     @media (max-width: 1024px) {
         .chat-container {
             grid-template-columns: 280px 1fr;
@@ -1339,7 +1324,6 @@
         }
     }
 
-    /* ===== МОБИЛЬНЫЕ ===== */
     @media (max-width: 768px) {
         .header-inner {
             padding: 14px 20px;
@@ -1461,7 +1445,7 @@
             height: 80px;
         }
 
-        /* Мобильный чат */
+        /* Мобильный чат — тоже без фиксированной высоты */
         .chat-section {
             padding: 90px 16px 40px;
             min-height: 100vh;
@@ -1472,13 +1456,10 @@
             grid-template-columns: 1fr;
             padding: 20px;
             gap: 16px;
-            height: calc(100vh - 130px);
-            display: flex;
-            flex-direction: column;
+            /* УБРАНА фиксированная высота */
         }
 
         .person-card {
-            flex-shrink: 0;
             padding: 20px;
         }
 
@@ -1497,8 +1478,8 @@
         }
 
         .chat-right {
-            flex: 1;
-            min-height: 0;
+            display: flex;
+            flex-direction: column;
         }
 
         .chat-header {
@@ -1518,7 +1499,7 @@
 
         .messages-list {
             flex: 1;
-            min-height: 0;
+            margin-bottom: 12px;
         }
 
         .message-item {
@@ -1550,7 +1531,6 @@
         }
     }
 
-    /* ===== ОЧЕНЬ МАЛЕНЬКИЕ ЭКРАНЫ ===== */
     @media (max-width: 480px) {
         .header-inner {
             padding: 12px 16px;
@@ -1842,9 +1822,9 @@
                 });
             }, (error) => {
                 console.error('Ошибка загрузки сообщений:', error);
-                list.innerHTML = '<div class="loading-spinner">⚠️ Ошибка загрузки. Проверьте консоль (F12)</div>';
+                list.innerHTML = '<div class="loading-spinner">⚠️ Ошибка загрузки</div>';
             });
-        }
+    }
 
     // ===== ОТПРАВКА СООБЩЕНИЯ В FIRESTORE =====
     async function sendMessageToFirebase(chatNum, text) {
@@ -1864,6 +1844,30 @@
     // ===== ЗАГРУЖАЕМ СООБЩЕНИЯ ПРИ СТАРТЕ =====
     loadMessages(1);
     loadMessages(2);
+
+    // ===== ГРАНИЦА СКРОЛЛА (ВЕРХНЯЯ ТОЧКА) =====
+    let scrollBoundaryTop = 0;
+    let isChatPage = false;
+
+    // Слушатель скролла — не даёт прокрутить выше границы
+    window.addEventListener('scroll', () => {
+        if (!isChatPage) return;
+        
+        if (window.scrollY < scrollBoundaryTop) {
+            window.scrollTo(0, scrollBoundaryTop);
+        }
+    }, { passive: true });
+
+    // Функция установки границы скролла
+    function setScrollBoundary() {
+        scrollBoundaryTop = window.scrollY;
+        isChatPage = true;
+    }
+
+    // Функция снятия границы
+    function clearScrollBoundary() {
+        isChatPage = false;
+    }
 
     // ===== ОСТАЛЬНАЯ ЛОГИКА САЙТА =====
     const burger = document.getElementById('burger');
@@ -1937,6 +1941,7 @@
     // Кнопка "Начать" в навигации
     document.getElementById('navStart').addEventListener('click', (e) => {
         e.preventDefault();
+        clearScrollBoundary();
         unlockScroll();
         setTimeout(() => {
             document.getElementById('department-selector').scrollIntoView({ behavior: 'smooth' });
@@ -1948,6 +1953,7 @@
 
     // Кнопка "Начать" на главной
     startBtn.addEventListener('click', () => {
+        clearScrollBoundary();
         unlockScroll();
         setTimeout(() => {
             document.getElementById('department-selector').scrollIntoView({ behavior: 'smooth' });
@@ -1959,6 +1965,7 @@
 
     // Кнопка "Вернуться" из выбора подразделения
     backBtn.addEventListener('click', () => {
+        clearScrollBoundary();
         unlockScroll();
         hideAllChats();
         setTimeout(() => {
@@ -1972,6 +1979,7 @@
     // Кнопки "Вернуться" из чатов
     document.querySelectorAll('.back-from-chat').forEach(btn => {
         btn.addEventListener('click', () => {
+            clearScrollBoundary();
             unlockScroll();
             hideAllChats();
             setTimeout(() => {
@@ -1991,6 +1999,7 @@
     continueBtn.addEventListener('click', () => {
         if (!departmentSelect.value) return;
 
+        clearScrollBoundary();
         unlockScroll();
         hideAllChats();
 
@@ -1999,18 +2008,20 @@
         } else if (departmentSelect.value === 'dept2') {
             chatSection2.classList.add('visible');
         } else {
-            alert('Переход на страницу: ' + departmentSelect.value + '\n(ссылку настроим на следующем этапе)');
+            alert('Переход на страницу: ' + departmentSelect.value);
             lockScroll();
             return;
         }
 
+        // Даём блоку чата отобразиться, потом устанавливаем границу
         setTimeout(() => {
             const activeChat = departmentSelect.value === 'dept1' ? chatSection1 : chatSection2;
             activeChat.scrollIntoView({ behavior: 'smooth' });
-            // Блокируем скролл страницы, но чат внутри прокручивается
+            
+            // После прокрутки устанавливаем границу = текущая позиция
             setTimeout(() => {
-                lockScroll();
-            }, 800);
+                setScrollBoundary();
+            }, 900);
         }, 100);
     });
 
@@ -2056,13 +2067,13 @@
     document.getElementById('toggleChat1').addEventListener('click', function() {
         document.getElementById('chatInputSection1').classList.toggle('hidden-section');
         this.classList.toggle('active');
-        this.textContent = this.classList.contains('active') ? '💬 Скрыть чат' : '💬 Открыть чат';
+        this.textContent = this.classList.contains('active') ? ' Скрыть чат' : '💬 Открыть чат';
     });
 
     document.getElementById('toggleInfo2').addEventListener('click', function() {
         document.getElementById('infoSection2').classList.toggle('hidden-section');
         this.classList.toggle('active');
-        this.textContent = this.classList.contains('active') ? '👤 Скрыть информацию' : '👤 Показать информацию о председателе';
+        this.textContent = this.classList.contains('active') ? ' Скрыть информацию' : ' Показать информацию о председателе';
     });
 
     document.getElementById('toggleChat2').addEventListener('click', function() {
@@ -2229,6 +2240,5 @@
         });
     });
 </script>
-
 </body>
 </html>
