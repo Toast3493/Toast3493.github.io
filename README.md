@@ -1387,22 +1387,27 @@
             left: 27px;
         }
 
-        .description {
-            padding: 100px 20px 60px;
-        }
+       .description {
+        padding: 100px 20px 60px;
+    }
 
-        .description-inner {
-            padding: 40px 25px !important;
-        }
+    .description-inner {
+        max-width: 100% !important;  /* Было 800px */
+        width: 100% !important;       /* Добавлено */
+        padding: 30px 20px !important; /* Уменьшен padding */
+    }
 
-        .description h2 {
-            font-size: 36px;
-            margin-bottom: 20px;
-        }
+    .description h2 {
+        font-size: 32px;  /* Было 36px */
+        margin-bottom: 20px;
+        word-wrap: break-word;  /* Добавлено */
+    }
 
-        .description p {
-            font-size: 17px;
-        }
+    .description p {
+        font-size: 16px;  /* Было 17px */
+        line-height: 1.6;  /* Добавлено */
+        word-wrap: break-word;  /* Добавлено */
+    }
 
         .btn-start {
             padding: 16px 40px;
