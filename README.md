@@ -1677,8 +1677,8 @@
     <div class="chat-section" id="chatSection1">
         <div class="chat-container">
             <div class="person-card">
-                <img src="123.png" alt="Фото" class="person-photo">
-                <div class="person-name">Иванов Иван Иванович</div>
+                <img src="/thumb/2/gXQcP0bXfQtR2pkVEMnBug/1024r/d/xxxx9283_311447.jpg" alt="Фото" class="person-photo">
+                <div class="person-name">Левтер Татьяна Владимировна</div>
             </div>
 
             <div class="chat-right">
