@@ -1768,10 +1768,10 @@ body.theme-dark .logo-dark {
         <div class="header-inner">
                 <div class="logo-container">
             <!-- Для светлой темы (чёрный логотип) -->
-<img src="https://raw.githubusercontent.com/Toast3493/Toast3493.github.io/main/logo-light.png" alt="Логотип" class="logo logo-light">
+<img src="https://raw.githubusercontent.com/Toast3493/Toast3493.github.io/main/logo-dark.png" alt="Логотип" class="logo logo-light">
 
 <!-- Для тёмной темы (белый логотип) -->
-<img src="https://raw.githubusercontent.com/Toast3493/Toast3493.github.io/main/logo-dark.png" alt="Логотип" class="logo logo-dark">
+<img src="https://raw.githubusercontent.com/Toast3493/Toast3493.github.io/main/logo-light.png" alt="Логотип" class="logo logo-dark">
         </div>
             <div class="burger" id="burger">
                 <span></span>
