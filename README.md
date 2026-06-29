@@ -570,53 +570,56 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     }
 
-    /* ===== ИКОНКИ СОЛНЦА И ЛУНЫ ===== */
-    .icon-sun, .icon-moon {
-        position: absolute;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-        transition: opacity 0.3s ease, transform 0.4s ease;
-        font-size: 16px;
-        line-height: 1;
-    }
+/* ===== ИКОНКИ СОЛНЦА И ЛУНЫ ===== */
+.icon-sun, .icon-moon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    font-size: 16px;
+    line-height: 1;
+    pointer-events: none;
+}
 
-    /* Иконка солнца */
-    .icon-sun {
-        opacity: 1;
-        transform: rotate(0deg) scale(1);
-    }
+/* Базовое состояние - солнце видно, луна скрыта */
+.icon-sun {
+    opacity: 1 !important;
+    transform: rotate(0deg) scale(1);
+}
 
-    /* Иконка луны */
-    .icon-moon {
-        opacity: 0;
-        transform: rotate(-90deg) scale(0.5);
-        filter: brightness(2.5) drop-shadow(0 0 3px rgba(255, 255, 255, 0.8));
-    }
+.icon-moon {
+    opacity: 0 !important;
+    transform: rotate(-90deg) scale(0.5);
+    filter: brightness(2.5) drop-shadow(0 0 3px rgba(255, 255, 255, 0.8));
+}
 
-    /* Светлая тема - показываем солнце */
-    body.theme-light .icon-sun {
-        opacity: 1;
-        transform: rotate(0deg) scale(1);
-    }
+/* Светлая тема - показываем солнце */
+body.theme-light .icon-sun {
+    opacity: 1 !important;
+    transform: rotate(0deg) scale(1) !important;
+}
 
-    body.theme-light .icon-moon {
-        opacity: 0;
-        transform: rotate(90deg) scale(0.5);
-    }
+body.theme-light .icon-moon {
+    opacity: 0 !important;
+    transform: rotate(90deg) scale(0.5) !important;
+}
 
-    /* Тёмная тема - показываем луну */
-    body.theme-dark .icon-sun {
-        opacity: 0;
-        transform: rotate(-90deg) scale(0.5);
-    }
+/* Тёмная тема - показываем луну */
+body.theme-dark .icon-sun {
+    opacity: 0 !important;
+    transform: rotate(-90deg) scale(0.5) !important;
+}
 
-    body.theme-dark .icon-moon {
-        opacity: 1;
-        transform: rotate(0deg) scale(1);
-    }
+body.theme-dark .icon-moon {
+    opacity: 1 !important;
+    transform: rotate(0deg) scale(1) !important;
+    filter: brightness(2.5) drop-shadow(0 0 5px rgba(255, 255, 255, 0.9)) !important;
+}
 
     /* ===== ОПИСАНИЕ ===== */
     .description {
