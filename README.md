@@ -1005,12 +1005,9 @@
         color: rgba(255, 255, 255, 0.6);
     }
 
-    /* ===== ПРАВАЯ ЧАСТЬ ЧАТА — ФЛЕКС-КОНТЕЙНЕР ===== */
     .chat-right {
         display: flex;
         flex-direction: column;
-        height: calc(100vh - 180px);
-        max-height: 700px;
     }
 
     .chat-header {
@@ -1018,7 +1015,6 @@
         font-weight: 700;
         margin-bottom: 20px;
         transition: all 0.6s ease;
-        flex-shrink: 0;
     }
 
     body.theme-light .chat-header {
@@ -1037,7 +1033,6 @@
 
     .message-input-wrapper {
         margin-bottom: 20px;
-        flex-shrink: 0;
     }
 
     .message-input {
@@ -1088,7 +1083,6 @@
         cursor: pointer;
         transition: all 0.3s ease;
         margin-bottom: 20px;
-        flex-shrink: 0;
     }
 
     body.theme-light .btn-send {
@@ -1117,7 +1111,6 @@
         height: 1px;
         margin: 20px 0;
         transition: all 0.6s ease;
-        flex-shrink: 0;
     }
 
     body.theme-light .messages-divider {
@@ -1128,15 +1121,11 @@
         background: linear-gradient(90deg, transparent, rgba(120, 100, 255, 0.3), transparent);
     }
 
-    /* ===== СПИСОК СООБЩЕНИЙ — СКРОЛЛИТСЯ ===== */
     .messages-list {
         flex: 1;
         overflow-y: auto;
-        overflow-x: hidden;
         padding-right: 10px;
         margin-bottom: 20px;
-        -webkit-overflow-scrolling: touch;
-        scroll-behavior: smooth;
     }
 
     .messages-list::-webkit-scrollbar {
@@ -1250,7 +1239,6 @@
         display: none;
     }
 
-    /* ===== БЛОК ИНФОРМАЦИИ С ОГРАНИЧЕННОЙ ВЫСОТОЙ ===== */
     .info-content {
         max-height: 350px;
         overflow-y: auto;
@@ -1325,7 +1313,6 @@
         transform: translateX(-50%) translateY(0);
     }
 
-    /* ===== ПЛАНШЕТЫ ===== */
     @media (max-width: 1024px) {
         .chat-container {
             grid-template-columns: 280px 1fr;
@@ -1343,7 +1330,6 @@
         }
     }
 
-    /* ===== МОБИЛЬНЫЕ ===== */
     @media (max-width: 768px) {
         .header-inner {
             padding: 14px 20px;
@@ -1465,7 +1451,7 @@
             height: 80px;
         }
 
-        /* ===== МОБИЛЬНЫЙ ЧАТ ===== */
+        /* ===== МОБИЛЬНЫЙ ЧАТ — ПОЛНАЯ ПРОКРУТКА ВСЕГО БЛОКА ===== */
         .chat-section {
             padding: 90px 16px 40px;
             min-height: 100vh;
@@ -1476,13 +1462,12 @@
             grid-template-columns: 1fr;
             padding: 20px;
             gap: 16px;
-            height: calc(100vh - 130px);
-            display: flex;
-            flex-direction: column;
+            /* УБРАНА фиксированная высота — блок растёт по содержимому */
+            height: auto;
+            display: grid;
         }
 
         .person-card {
-            flex-shrink: 0;
             padding: 20px;
         }
 
@@ -1501,13 +1486,9 @@
             font-size: 14px;
         }
 
-        /* Правая часть чата занимает всё оставшееся место */
         .chat-right {
-            flex: 1;
             display: flex;
             flex-direction: column;
-            min-height: 0;
-            height: auto;
         }
 
         .chat-header {
@@ -1525,12 +1506,11 @@
             font-size: 15px;
         }
 
-        /* Сообщения скроллятся внутри */
+        /* Список сообщений — без ограничения высоты, прокручивается вся страница */
         .messages-list {
             flex: 1;
             max-height: none;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
+            overflow-y: visible;
             margin-bottom: 12px;
         }
 
@@ -1542,7 +1522,6 @@
             font-size: 14px;
         }
 
-        /* Увеличиваем блок информации на мобильных */
         .info-content {
             max-height: 250px;
         }
@@ -1554,7 +1533,6 @@
         }
     }
 
-    /* ===== ОЧЕНЬ МАЛЕНЬКИЕ ЭКРАНЫ ===== */
     @media (max-width: 480px) {
         .header-inner {
             padding: 12px 16px;
