@@ -1793,9 +1793,12 @@ body.theme-dark .logo-dark {
                 <a class="tab2 fake-tab" data-msg="Скоро будет доступно ✨">Вкладка 2</a>
                 <a class="tab3 fake-tab" data-msg="Раздел в разработке 🚀">Вкладка 3</a>
             </nav>
-            <div class="theme-toggle" id="themeToggle" title="Переключить тему">
-                <div class="toggle-knob" id="toggleKnob">☀️</div>
-            </div>
+<div class="theme-toggle" id="themeToggle" title="Переключить тему">
+    <div class="toggle-knob" id="toggleKnob">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </div>
+</div>
         </div>
     </header>
 
