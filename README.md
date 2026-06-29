@@ -1767,8 +1767,8 @@ body.theme-dark .logo-dark {
     <header>
         <div class="header-inner">
                 <div class="logo-container">
-            <img src="logo-light.png" alt="Логотип" class="logo logo-light">
-            <img src="logo-dark.png" alt="Логотип" class="logo logo-dark">
+            <img src="https://i.pinimg.com/736x/10/7a/ce/107ace1ea3a26528d22d6fb9e82c1ee6.jpg" alt="Логотип" class="logo logo-light">
+            <img src="https://i.pinimg.com/736x/ee/ca/7b/eeca7bf77ce5c27afd4a731dbe5eb36f.jpg" alt="Логотип" class="logo logo-dark">
         </div>
             <div class="burger" id="burger">
                 <span></span>
