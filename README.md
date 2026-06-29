@@ -1705,7 +1705,7 @@
 }
 
 .logo {
-    height: 50px;
+    height: 110px;
     width: auto;
     transition: opacity 0.6s ease;
     background: transparent !important; /* Убираем фон изображения */
