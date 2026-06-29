@@ -3,6 +3,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Главная страница</title>
+    <!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
@@ -1673,7 +1676,9 @@
 
                 <div class="messages-divider"></div>
 
-                <div class="messages-list" id="messagesList1"></div>
+                <div class="messages-list" id="messagesList1">
+    <div class="loading-spinner">Загрузка сообщений...</div>
+</div>
 
                 <button class="btn-back back-from-chat" data-target="dept-selector">← Вернуться к выбору подразделения</button>
             </div>
@@ -1711,7 +1716,9 @@
 
                 <div class="messages-divider"></div>
 
-                <div class="messages-list" id="messagesList2"></div>
+                <div class="messages-list" id="messagesList2">
+    <div class="loading-spinner">Загрузка сообщений...</div>
+</div>
 
                 <button class="btn-back back-from-chat" data-target="dept-selector">← Вернуться к выбору подразделения</button>
             </div>
@@ -1721,76 +1728,198 @@
     <div class="toast" id="toast"></div>
 
     <script>
-        const burger = document.getElementById('burger');
-        const nav = document.getElementById('nav');
+    // ===== FIREBASE КОНФИГУРАЦИЯ =====
+    // ⚠️ ВСТАВЬ СЮДА СВОИ ДАННЫЕ ИЗ FIREBASE CONSOLE!
+    // (Настройки проекта → Ваши приложения → Web app → firebaseConfig)
+const firebaseConfig = {
+  apiKey: "AIzaSyB5PeNgXrAPyW8qnfEvPSnB4qa_GCE1Dfo",
+  authDomain: "wiki-profcom.firebaseapp.com",
+  projectId: "wiki-profcom",
+  storageBucket: "wiki-profcom.firebasestorage.app",
+  messagingSenderId: "789513290691",
+  appId: "1:789513290691:web:40e2ebc7b3611ac9b83376",
+  measurementId: "G-5R4SZ4B19R"
+};
 
-        burger.addEventListener('click', () => {
-            burger.classList.toggle('active');
-            nav.classList.toggle('active');
-        });
+    // Инициализация Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-        nav.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                burger.classList.remove('active');
-                nav.classList.remove('active');
+    // ===== УТИЛИТЫ =====
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function formatTimestamp(ts) {
+        if (!ts) return '';
+        const date = ts.toDate ? ts.toDate() : new Date(ts);
+        const now = new Date();
+        const diff = now - date;
+        const minutes = Math.floor(diff / 60000);
+        const hours = Math.floor(diff / 3600000);
+        const days = Math.floor(diff / 86400000);
+
+        if (minutes < 1) return 'только что';
+        if (minutes < 60) return `${minutes} мин. назад`;
+        if (hours < 24) return `${hours} ч. назад`;
+        if (days < 7) return `${days} дн. назад`;
+        return date.toLocaleDateString('ru-RU');
+    }
+
+    // ===== ЗАГРУЗКА СООБЩЕНИЙ ИЗ FIRESTORE =====
+    function loadMessages(chatNum) {
+        const list = document.getElementById('messagesList' + chatNum);
+        const collectionName = 'messages' + chatNum;
+
+        // Показываем индикатор загрузки
+        list.innerHTML = '<div class="loading-spinner">Загрузка сообщений...</div>';
+
+        // Подписываемся на обновления в реальном времени
+        db.collection(collectionName)
+            .orderBy('timestamp', 'desc')
+            .onSnapshot((snapshot) => {
+                list.innerHTML = '';
+
+                if (snapshot.empty) {
+                    list.innerHTML = '<div class="loading-spinner">Пока нет сообщений. Будьте первым!</div>';
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const item = document.createElement('div');
+                    item.className = 'message-item';
+
+                    const timeStr = data.timestamp ? formatTimestamp(data.timestamp) : '';
+                    const timeHtml = timeStr ? `<div class="message-time">${timeStr}</div>` : '';
+
+                    item.innerHTML = `
+                        <div class="message-text">${escapeHtml(data.text || '')}</div>
+                        ${timeHtml}
+                    `;
+                    list.appendChild(item);
+                });
+            }, (error) => {
+                console.error('Ошибка загрузки сообщений:', error);
+                list.innerHTML = '<div class="loading-spinner">⚠️ Ошибка загрузки. Проверьте консоль (F12)</div>';
             });
+    }
+
+    // ===== ОТПРАВКА СООБЩЕНИЯ В FIRESTORE =====
+    async function sendMessageToFirebase(chatNum, text) {
+        const collectionName = 'messages' + chatNum;
+        try {
+            await db.collection(collectionName).add({
+                text: text,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            return { success: true };
+        } catch (error) {
+            console.error('Ошибка отправки:', error);
+            return { success: false, error: error.message };
+        }
+    }
+
+    // ===== ЗАГРУЖАЕМ СООБЩЕНИЯ ПРИ СТАРТЕ =====
+    loadMessages(1);
+    loadMessages(2);
+
+    // ===== ОСТАЛЬНАЯ ЛОГИКА САЙТА =====
+    const burger = document.getElementById('burger');
+    const nav = document.getElementById('nav');
+
+    burger.addEventListener('click', () => {
+        burger.classList.toggle('active');
+        nav.classList.toggle('active');
+    });
+
+    nav.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            burger.classList.remove('active');
+            nav.classList.remove('active');
         });
+    });
 
-        const body = document.body;
-        const themeToggle = document.getElementById('themeToggle');
-        const toggleKnob = document.getElementById('toggleKnob');
+    const body = document.body;
+    const themeToggle = document.getElementById('themeToggle');
+    const toggleKnob = document.getElementById('toggleKnob');
 
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        setTheme(savedTheme);
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
 
-        themeToggle.addEventListener('click', () => {
-            const newTheme = body.classList.contains('theme-light') ? 'dark' : 'light';
-            setTheme(newTheme);
-            localStorage.setItem('theme', newTheme);
-        });
+    themeToggle.addEventListener('click', () => {
+        const newTheme = body.classList.contains('theme-light') ? 'dark' : 'light';
+        setTheme(newTheme);
+        localStorage.setItem('theme', newTheme);
+    });
 
-        function setTheme(theme) {
-            body.classList.remove('theme-light', 'theme-dark');
-            body.classList.add('theme-' + theme);
-            toggleKnob.textContent = theme === 'light' ? '☀️' : '🌙';
-            updateWaveColors(theme);
+    function setTheme(theme) {
+        body.classList.remove('theme-light', 'theme-dark');
+        body.classList.add('theme-' + theme);
+        toggleKnob.textContent = theme === 'light' ? '☀️' : '🌙';
+        updateWaveColors(theme);
+    }
+
+    function updateWaveColors(theme) {
+        const path1 = document.querySelector('.wave-path-1');
+        const path2 = document.querySelector('.wave-path-2');
+        if (theme === 'light') {
+            path1.setAttribute('fill', 'rgba(255, 255, 255, 0.3)');
+            path2.setAttribute('fill', 'rgba(255, 255, 255, 0.5)');
+        } else {
+            path1.setAttribute('fill', 'rgba(120, 100, 255, 0.1)');
+            path2.setAttribute('fill', 'rgba(100, 200, 255, 0.15)');
         }
+    }
+    updateWaveColors(savedTheme);
 
-        function updateWaveColors(theme) {
-            const path1 = document.querySelector('.wave-path-1');
-            const path2 = document.querySelector('.wave-path-2');
-            if (theme === 'light') {
-                path1.setAttribute('fill', 'rgba(255, 255, 255, 0.3)');
-                path2.setAttribute('fill', 'rgba(255, 255, 255, 0.5)');
-            } else {
-                path1.setAttribute('fill', 'rgba(120, 100, 255, 0.1)');
-                path2.setAttribute('fill', 'rgba(100, 200, 255, 0.15)');
-            }
-        }
-        updateWaveColors(savedTheme);
+    const startBtn = document.getElementById('startBtn');
+    const backBtn = document.getElementById('backBtn');
+    const continueBtn = document.getElementById('continueBtn');
+    const departmentSelect = document.getElementById('departmentSelect');
+    const chatSection1 = document.getElementById('chatSection1');
+    const chatSection2 = document.getElementById('chatSection2');
 
-        const startBtn = document.getElementById('startBtn');
-        const backBtn = document.getElementById('backBtn');
-        const continueBtn = document.getElementById('continueBtn');
-        const departmentSelect = document.getElementById('departmentSelect');
-        const chatSection1 = document.getElementById('chatSection1');
-        const chatSection2 = document.getElementById('chatSection2');
+    function lockScroll() {
+        body.classList.add('locked');
+    }
 
-        function lockScroll() {
-            body.classList.add('locked');
-        }
+    function unlockScroll() {
+        body.classList.remove('locked');
+    }
 
-        function unlockScroll() {
-            body.classList.remove('locked');
-        }
+    function hideAllChats() {
+        chatSection1.classList.remove('visible');
+        chatSection2.classList.remove('visible');
+    }
 
-        function hideAllChats() {
-            chatSection1.classList.remove('visible');
-            chatSection2.classList.remove('visible');
-        }
+    startBtn.addEventListener('click', () => {
+        unlockScroll();
+        setTimeout(() => {
+            document.getElementById('department-selector').scrollIntoView({ behavior: 'smooth' });
+            setTimeout(() => {
+                lockScroll();
+            }, 800);
+        }, 100);
+    });
 
-        startBtn.addEventListener('click', () => {
+    backBtn.addEventListener('click', () => {
+        unlockScroll();
+        hideAllChats();
+        setTimeout(() => {
+            document.querySelector('.description').scrollIntoView({ behavior: 'smooth' });
+            setTimeout(() => {
+                lockScroll();
+            }, 800);
+        }, 100);
+    });
+
+    document.querySelectorAll('.back-from-chat').forEach(btn => {
+        btn.addEventListener('click', () => {
             unlockScroll();
+            hideAllChats();
             setTimeout(() => {
                 document.getElementById('department-selector').scrollIntoView({ behavior: 'smooth' });
                 setTimeout(() => {
@@ -1798,296 +1927,236 @@
                 }, 800);
             }, 100);
         });
+    });
 
-        backBtn.addEventListener('click', () => {
-            unlockScroll();
-            hideAllChats();
+    departmentSelect.addEventListener('change', () => {
+        continueBtn.disabled = !departmentSelect.value;
+    });
+
+    continueBtn.addEventListener('click', () => {
+        if (!departmentSelect.value) return;
+
+        unlockScroll();
+        hideAllChats();
+
+        if (departmentSelect.value === 'dept1') {
+            chatSection1.classList.add('visible');
+        } else if (departmentSelect.value === 'dept2') {
+            chatSection2.classList.add('visible');
+        } else {
+            alert('Переход на страницу: ' + departmentSelect.value + '\n(ссылку настроим на следующем этапе)');
+            lockScroll();
+            return;
+        }
+
+        setTimeout(() => {
+            const activeChat = departmentSelect.value === 'dept1' ? chatSection1 : chatSection2;
+            activeChat.scrollIntoView({ behavior: 'smooth' });
             setTimeout(() => {
-                document.querySelector('.description').scrollIntoView({ behavior: 'smooth' });
-                setTimeout(() => {
-                    lockScroll();
-                }, 800);
-            }, 100);
-        });
-
-        document.querySelectorAll('.back-from-chat').forEach(btn => {
-            btn.addEventListener('click', () => {
-                unlockScroll();
-                hideAllChats();
-                setTimeout(() => {
-                    document.getElementById('department-selector').scrollIntoView({ behavior: 'smooth' });
-                    setTimeout(() => {
-                        lockScroll();
-                    }, 800);
-                }, 100);
-            });
-        });
-
-        departmentSelect.addEventListener('change', () => {
-            continueBtn.disabled = !departmentSelect.value;
-        });
-
-        continueBtn.addEventListener('click', () => {
-            if (!departmentSelect.value) return;
-
-            unlockScroll();
-            hideAllChats();
-
-            if (departmentSelect.value === 'dept1') {
-                chatSection1.classList.add('visible');
-            } else if (departmentSelect.value === 'dept2') {
-                chatSection2.classList.add('visible');
-            } else {
-                alert('Переход на страницу: ' + departmentSelect.value + '\n(ссылку настроим на следующем этапе)');
                 lockScroll();
+            }, 800);
+        }, 100);
+    });
+
+    // ===== ОТПРАВКА СООБЩЕНИЙ (НОВАЯ ЛОГИКА С FIREBASE) =====
+    document.querySelectorAll('.btn-send').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const chatNum = btn.dataset.chat;
+            const input = document.getElementById('messageInput' + chatNum);
+            const text = input.value.trim();
+
+            if (!text) {
+                showToast('Пожалуйста, введите сообщение');
                 return;
             }
 
-            setTimeout(() => {
-                const activeChat = departmentSelect.value === 'dept1' ? chatSection1 : chatSection2;
-                activeChat.scrollIntoView({ behavior: 'smooth' });
-                setTimeout(() => {
-                    lockScroll();
-                }, 800);
-            }, 100);
-        });
+            // Блокируем кнопку на время отправки
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Отправка...';
 
-        const staticMessages1 = [
-            'Спасибо профсоюзу за защиту наших прав! Благодаря вам мы смогли добиться справедливых условий труда.',
-            'Огромная благодарность за организацию корпоративных мероприятий. Это действительно сплачивает коллектив!',
-            'Профсоюз всегда на страже интересов работников. Спасибо за вашу неустанную работу!',
-            'Благодаря профсоюзу нам удалось решить сложный трудовой спор. Низкий поклон за вашу поддержку!',
-            'Спасибо за защиту наших прав и интересов. Ваша работа бесценна!',
-            'Профсоюз - это настоящая опора для каждого работника. Благодарим за всё!'
-        ];
+            const result = await sendMessageToFirebase(chatNum, text);
 
-        const staticMessages2 = [
-            'Анна Сергеевна, спасибо за вашу отзывчивость! Вы всегда готовы помочь.',
-            'Благодаря вам наши культурные мероприятия стали намного интереснее!',
-            'Спасибо за внимательное отношение к вопросам охраны труда!',
-            'Ваша работа по социальной защите работников просто неоценима!',
-            'Отдельное спасибо за организацию новогодних праздников для детей сотрудников!',
-            'Вы настоящий профессионал своего дела. Благодарим за ваш труд!'
-        ];
-
-        function populateMessages(listId, messages) {
-            const list = document.getElementById(listId);
-            messages.forEach(msg => {
-                const item = document.createElement('div');
-                item.className = 'message-item';
-                item.innerHTML = `<div class="message-text">${msg}</div>`;
-                list.appendChild(item);
-            });
-        }
-
-        populateMessages('messagesList1', staticMessages1);
-        populateMessages('messagesList2', staticMessages2);
-
-        document.querySelectorAll('.btn-send').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const chatNum = btn.dataset.chat;
-                const input = document.getElementById('messageInput' + chatNum);
-                const list = document.getElementById('messagesList' + chatNum);
-                const text = input.value.trim();
-
-                if (!text) {
-                    showToast('Пожалуйста, введите сообщение');
-                    return;
-                }
-
-                const item = document.createElement('div');
-                item.className = 'message-item';
-                item.innerHTML = `<div class="message-text">${text}</div>`;
-                list.insertBefore(item, list.firstChild);
-
+            if (result.success) {
                 input.value = '';
-                showToast('Сообщение отправлено! Спасибо за ваш отзыв.');
-            });
-        });
-
-        document.getElementById('toggleInfo1').addEventListener('click', function() {
-            document.getElementById('infoSection1').classList.toggle('hidden-section');
-            this.classList.toggle('active');
-            if (this.classList.contains('active')) {
-                this.textContent = '👤 Скрыть информацию';
+                showToast('✅ Сообщение отправлено! Спасибо за ваш отзыв.');
             } else {
-                this.textContent = '👤 Показать информацию о председателе';
+                showToast('❌ Ошибка отправки: ' + result.error);
             }
-        });
 
-        document.getElementById('toggleChat1').addEventListener('click', function() {
-            document.getElementById('chatInputSection1').classList.toggle('hidden-section');
-            this.classList.toggle('active');
-            if (this.classList.contains('active')) {
-                this.textContent = '💬 Скрыть чат';
-            } else {
-                this.textContent = '💬 Открыть чат';
-            }
+            btn.disabled = false;
+            btn.textContent = originalText;
         });
+    });
 
-        document.getElementById('toggleInfo2').addEventListener('click', function() {
-            document.getElementById('infoSection2').classList.toggle('hidden-section');
-            this.classList.toggle('active');
-            if (this.classList.contains('active')) {
-                this.textContent = '👤 Скрыть информацию';
-            } else {
-                this.textContent = '👤 Показать информацию о председателе';
-            }
-        });
+    // ===== TOGGLE КНОПКИ (ИНФО И ЧАТ) =====
+    document.getElementById('toggleInfo1').addEventListener('click', function() {
+        document.getElementById('infoSection1').classList.toggle('hidden-section');
+        this.classList.toggle('active');
+        this.textContent = this.classList.contains('active') ? '👤 Скрыть информацию' : '👤 Показать информацию о председателе';
+    });
 
-        document.getElementById('toggleChat2').addEventListener('click', function() {
-            document.getElementById('chatInputSection2').classList.toggle('hidden-section');
-            this.classList.toggle('active');
-            if (this.classList.contains('active')) {
-                this.textContent = '💬 Скрыть чат';
-            } else {
-                this.textContent = '💬 Открыть чат';
-            }
-        });
+    document.getElementById('toggleChat1').addEventListener('click', function() {
+        document.getElementById('chatInputSection1').classList.toggle('hidden-section');
+        this.classList.toggle('active');
+        this.textContent = this.classList.contains('active') ? '💬 Скрыть чат' : '💬 Открыть чат';
+    });
 
-        function createBubbles() {
-            const container = document.getElementById('bubbles');
-            const count = 25;
-            for (let i = 0; i < count; i++) {
-                const bubble = document.createElement('div');
-                bubble.className = 'bubble';
-                const size = Math.random() * 40 + 10;
-                bubble.style.width = size + 'px';
-                bubble.style.height = size + 'px';
-                bubble.style.left = Math.random() * 100 + '%';
-                bubble.style.animationDuration = (Math.random() * 10 + 8) + 's';
-                bubble.style.animationDelay = Math.random() * 10 + 's';
-                container.appendChild(bubble);
-            }
+    document.getElementById('toggleInfo2').addEventListener('click', function() {
+        document.getElementById('infoSection2').classList.toggle('hidden-section');
+        this.classList.toggle('active');
+        this.textContent = this.classList.contains('active') ? '👤 Скрыть информацию' : '👤 Показать информацию о председателе';
+    });
+
+    document.getElementById('toggleChat2').addEventListener('click', function() {
+        document.getElementById('chatInputSection2').classList.toggle('hidden-section');
+        this.classList.toggle('active');
+        this.textContent = this.classList.contains('active') ? '💬 Скрыть чат' : '💬 Открыть чат';
+    });
+
+    // ===== ПУЗЫРЬКИ =====
+    function createBubbles() {
+        const container = document.getElementById('bubbles');
+        const count = 25;
+        for (let i = 0; i < count; i++) {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            const size = Math.random() * 40 + 10;
+            bubble.style.width = size + 'px';
+            bubble.style.height = size + 'px';
+            bubble.style.left = Math.random() * 100 + '%';
+            bubble.style.animationDuration = (Math.random() * 10 + 8) + 's';
+            bubble.style.animationDelay = Math.random() * 10 + 's';
+            container.appendChild(bubble);
         }
-        createBubbles();
+    }
+    createBubbles();
 
-        const canvas = document.getElementById('starCanvas');
-        const ctx = canvas.getContext('2d');
+    // ===== ЗВЁЗДЫ =====
+    const canvas = document.getElementById('starCanvas');
+    const ctx = canvas.getContext('2d');
 
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    class Star {
+        constructor() { this.reset(); }
+        reset() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height - canvas.height;
+            this.size = Math.random() * 2 + 0.5;
+            this.speed = Math.random() * 1.5 + 0.3;
+            this.opacity = Math.random() * 0.8 + 0.2;
+            this.twinkleSpeed = Math.random() * 0.02 + 0.005;
+            this.twinklePhase = Math.random() * Math.PI * 2;
+            const colors = [[120,100,255],[100,200,255],[255,130,200],[255,255,255]];
+            this.color = colors[Math.floor(Math.random() * colors.length)];
         }
-        resize();
-        window.addEventListener('resize', resize);
-
-        class Star {
-            constructor() { this.reset(); }
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height - canvas.height;
-                this.size = Math.random() * 2 + 0.5;
-                this.speed = Math.random() * 1.5 + 0.3;
-                this.opacity = Math.random() * 0.8 + 0.2;
-                this.twinkleSpeed = Math.random() * 0.02 + 0.005;
-                this.twinklePhase = Math.random() * Math.PI * 2;
-                const colors = [
-                    [120, 100, 255], [100, 200, 255],
-                    [255, 130, 200], [255, 255, 255]
-                ];
-                this.color = colors[Math.floor(Math.random() * colors.length)];
-            }
-            update() {
-                this.y += this.speed;
-                this.twinklePhase += this.twinkleSpeed;
-                this.currentOpacity = this.opacity * (0.5 + 0.5 * Math.sin(this.twinklePhase));
-                if (this.y > canvas.height + 10) { this.reset(); this.y = -10; }
-            }
-            draw() {
-                const [r, g, b] = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${this.currentOpacity})`;
-                ctx.fill();
-                if (this.size > 1) {
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${this.currentOpacity * 0.15})`;
-                    ctx.fill();
-                }
-            }
+        update() {
+            this.y += this.speed;
+            this.twinklePhase += this.twinkleSpeed;
+            this.currentOpacity = this.opacity * (0.5 + 0.5 * Math.sin(this.twinklePhase));
+            if (this.y > canvas.height + 10) { this.reset(); this.y = -10; }
         }
-
-        class ShootingStar {
-            constructor() { this.reset(); }
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height * 0.5;
-                this.length = Math.random() * 80 + 40;
-                this.speed = Math.random() * 8 + 6;
-                this.angle = Math.PI / 4 + (Math.random() - 0.5) * 0.3;
-                this.opacity = 1;
-                this.life = 0;
-                this.maxLife = Math.random() * 40 + 20;
-                this.active = false;
-            }
-            activate() { this.reset(); this.active = true; }
-            update() {
-                if (!this.active) return;
-                this.x += Math.cos(this.angle) * this.speed;
-                this.y += Math.sin(this.angle) * this.speed;
-                this.life++;
-                this.opacity = 1 - this.life / this.maxLife;
-                if (this.life >= this.maxLife) this.active = false;
-            }
-            draw() {
-                if (!this.active) return;
-                const tailX = this.x - Math.cos(this.angle) * this.length;
-                const tailY = this.y - Math.sin(this.angle) * this.length;
-                const gradient = ctx.createLinearGradient(tailX, tailY, this.x, this.y);
-                gradient.addColorStop(0, `rgba(255, 255, 255, 0)`);
-                gradient.addColorStop(1, `rgba(255, 255, 255, ${this.opacity})`);
+        draw() {
+            const [r, g, b] = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${this.currentOpacity})`;
+            ctx.fill();
+            if (this.size > 1) {
                 ctx.beginPath();
-                ctx.moveTo(tailX, tailY);
-                ctx.lineTo(this.x, this.y);
-                ctx.strokeStyle = gradient;
-                ctx.lineWidth = 1.5;
-                ctx.stroke();
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                ctx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${this.currentOpacity * 0.15})`;
                 ctx.fill();
             }
         }
+    }
 
-        const stars = Array.from({ length: 150 }, () => new Star());
-        const shootingStars = Array.from({ length: 3 }, () => new ShootingStar());
-        let shootingTimer = 0;
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            stars.forEach(s => { s.update(); s.draw(); });
-            shootingTimer++;
-            if (shootingTimer > 120 + Math.random() * 200) {
-                const inactive = shootingStars.find(s => !s.active);
-                if (inactive) inactive.activate();
-                shootingTimer = 0;
-            }
-            shootingStars.forEach(s => { s.update(); s.draw(); });
-            requestAnimationFrame(animate);
+    class ShootingStar {
+        constructor() { this.reset(); }
+        reset() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height * 0.5;
+            this.length = Math.random() * 80 + 40;
+            this.speed = Math.random() * 8 + 6;
+            this.angle = Math.PI / 4 + (Math.random() - 0.5) * 0.3;
+            this.opacity = 1;
+            this.life = 0;
+            this.maxLife = Math.random() * 40 + 20;
+            this.active = false;
         }
-        animate();
-
-        const toast = document.getElementById('toast');
-        let toastTimeout;
-
-        function showToast(message) {
-            toast.textContent = message;
-            toast.classList.add('show');
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+        activate() { this.reset(); this.active = true; }
+        update() {
+            if (!this.active) return;
+            this.x += Math.cos(this.angle) * this.speed;
+            this.y += Math.sin(this.angle) * this.speed;
+            this.life++;
+            this.opacity = 1 - this.life / this.maxLife;
+            if (this.life >= this.maxLife) this.active = false;
         }
+        draw() {
+            if (!this.active) return;
+            const tailX = this.x - Math.cos(this.angle) * this.length;
+            const tailY = this.y - Math.sin(this.angle) * this.length;
+            const gradient = ctx.createLinearGradient(tailX, tailY, this.x, this.y);
+            gradient.addColorStop(0, `rgba(255, 255, 255, 0)`);
+            gradient.addColorStop(1, `rgba(255, 255, 255, ${this.opacity})`);
+            ctx.beginPath();
+            ctx.moveTo(tailX, tailY);
+            ctx.lineTo(this.x, this.y);
+            ctx.strokeStyle = gradient;
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+            ctx.fill();
+        }
+    }
 
-        document.querySelectorAll('.fake-tab').forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                e.preventDefault();
-                showToast(tab.dataset.msg);
-            });
+    const stars = Array.from({ length: 150 }, () => new Star());
+    const shootingStars = Array.from({ length: 3 }, () => new ShootingStar());
+    let shootingTimer = 0;
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        stars.forEach(s => { s.update(); s.draw(); });
+        shootingTimer++;
+        if (shootingTimer > 120 + Math.random() * 200) {
+            const inactive = shootingStars.find(s => !s.active);
+            if (inactive) inactive.activate();
+            shootingTimer = 0;
+        }
+        shootingStars.forEach(s => { s.update(); s.draw(); });
+        requestAnimationFrame(animate);
+    }
+    animate();
+
+    // ===== ТОСТЫ =====
+    const toast = document.getElementById('toast');
+    let toastTimeout;
+
+    function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+
+    document.querySelectorAll('.fake-tab').forEach(tab => {
+        tab.addEventListener('click', (e) => {
+            e.preventDefault();
+            showToast(tab.dataset.msg);
         });
-    </script>
+    });
+</script>
 
 </body>
 </html>
