@@ -1752,6 +1752,42 @@
     <div class="toast" id="toast"></div>
 
     <script>
+
+    // Принудительно очищаем hash из URL при загрузке и при любом изменении
+(function() {
+    // Убираем hash при загрузке страницы
+    if (window.location.hash) {
+        history.replaceState(null, null, window.location.pathname);
+    }
+    
+    // Перехватываем все клики по ссылкам с hash
+    document.addEventListener('click', function(e) {
+        const target = e.target.closest('a[href^="#"]');
+        if (target) {
+            e.preventDefault();
+            // Если это наша кнопка "Начать" — обрабатываем вручную
+            if (target.id === 'navStart') {
+                clearScrollBoundary();
+                unlockScroll();
+                setTimeout(() => {
+                    document.getElementById('department-selector').scrollIntoView({ behavior: 'smooth' });
+                    setTimeout(() => {
+                        lockScroll();
+                    }, 800);
+                }, 100);
+            }
+            // Убираем hash из URL
+            history.replaceState(null, null, window.location.pathname);
+        }
+    });
+    
+    // На случай, если hash всё же попал в URL (например, при обновлении)
+    window.addEventListener('hashchange', function() {
+        history.replaceState(null, null, window.location.pathname);
+    });
+})();
+
+
         // ===== FIREBASE КОНФИГУРАЦИЯ =====
         const firebaseConfig = {
   apiKey: "AIzaSyB5PeNgXrAPyW8qnfEvPSnB4qa_GCE1Dfo",
@@ -1788,6 +1824,8 @@
         if (days < 7) return `${days} дн. назад`;
         return date.toLocaleDateString('ru-RU');
     }
+
+
 
     // ===== ЗАГРУЗКА СООБЩЕНИЙ ИЗ FIRESTORE =====
     function loadMessages(chatNum) {
