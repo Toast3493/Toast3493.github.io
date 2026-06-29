@@ -1278,40 +1278,47 @@
         opacity: 0.6;
     }
 
-    .toast {
-        position: fixed;
-        bottom: 40px;
-        left: 50%;
-        transform: translateX(-50%) translateY(100px);
-        padding: 16px 32px;
-        border-radius: 50px;
-        font-size: 14px;
-        font-weight: 500;
-        z-index: 200;
-        transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-        pointer-events: none;
-        max-width: 90%;
-        text-align: center;
-    }
+.toast {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    padding: 16px 32px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 200;
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+    pointer-events: none;
+    max-width: 90%;
+    text-align: center;
+    opacity: 0;
+}
 
-    body.theme-light .toast {
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        color: #2d2d4a;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    }
+body.theme-light .toast {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: #2d2d4a;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
 
-    body.theme-dark .toast {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        color: #fff;
-    }
+body.theme-dark .toast {
+    background: rgba(30, 30, 50, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
 
-    .toast.show {
-        transform: translateX(-50%) translateY(0);
-    }
+.toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.toast.hide {
+    transform: translateX(-50%) translateY(100px);
+    opacity: 0;
+}
 
     @media (max-width: 1024px) {
         .chat-container {
@@ -1526,11 +1533,20 @@
             max-height: 250px;
         }
 
-        .toast {
-            bottom: 20px;
-            padding: 14px 24px;
-            font-size: 13px;
-        }
+    .toast {
+        bottom: auto;
+        top: 80px;
+        padding: 12px 20px;
+        font-size: 13px;
+        max-width: 85%;
+    }
+        .toast.show {
+        transform: translateX(-50%) translateY(0);
+    }
+    
+    .toast.hide {
+        transform: translateX(-50%) translateY(-100px);
+    }
     }
 
     @media (max-width: 480px) {
