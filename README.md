@@ -9,7 +9,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
     * {
         margin: 0;
@@ -37,7 +37,7 @@
 
     body.theme-light {
         color: #2d2d4a;
-        background: #fff5ec;
+        background: #fefefe;
     }
 
     body.theme-dark {
@@ -45,6 +45,7 @@
         background: #0a0a1a;
     }
 
+    /* ===== СВЕТЛАЯ ТЕМА: ГЕОМЕТРИЧЕСКИЕ ФИГУРЫ ===== */
     .bg-light {
         position: fixed;
         top: 0;
@@ -52,9 +53,8 @@
         width: 100%;
         height: 100%;
         z-index: -3;
-        background: linear-gradient(-45deg, #ffecd2, #fcb69f, #a1c4fd, #c2e9fb, #ffd6e0, #ffb6c1);
-        background-size: 400% 400%;
-        animation: gradientShift 20s ease infinite;
+        background: #fefefe;
+        overflow: hidden;
         transition: opacity 0.6s ease;
     }
 
@@ -63,12 +63,161 @@
         pointer-events: none;
     }
 
-    @keyframes gradientShift {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
+    /* Геометрические секторы */
+    .geo-shape {
+        position: absolute;
+        opacity: 0.15;
+        animation: geoRotate 30s linear infinite;
     }
 
+    .geo-shape.sector1 {
+        width: 800px;
+        height: 800px;
+        background: conic-gradient(from 0deg, #f7941d 0deg, #f7941d 60deg, transparent 60deg);
+        top: -200px;
+        left: -200px;
+        border-radius: 50%;
+        animation-duration: 40s;
+    }
+
+    .geo-shape.sector2 {
+        width: 600px;
+        height: 600px;
+        background: conic-gradient(from 120deg, #ed1c24 0deg, #ed1c24 90deg, transparent 90deg);
+        top: 100px;
+        right: -150px;
+        border-radius: 50%;
+        animation-duration: 35s;
+        animation-direction: reverse;
+    }
+
+    .geo-shape.sector3 {
+        width: 700px;
+        height: 700px;
+        background: conic-gradient(from 240deg, #be1e2d 0deg, #be1e2d 75deg, transparent 75deg);
+        bottom: -100px;
+        left: 30%;
+        border-radius: 50%;
+        animation-duration: 45s;
+    }
+
+    .geo-shape.sector4 {
+        width: 500px;
+        height: 500px;
+        background: conic-gradient(from 60deg, #fbb03b 0deg, #fbb03b 45deg, transparent 45deg);
+        top: 50%;
+        left: -100px;
+        border-radius: 50%;
+        animation-duration: 25s;
+        animation-direction: reverse;
+    }
+
+    .geo-shape.sector5 {
+        width: 400px;
+        height: 400px;
+        background: conic-gradient(from 180deg, #ed1c24 0deg, #ed1c24 120deg, transparent 120deg);
+        bottom: 20%;
+        right: 10%;
+        border-radius: 50%;
+        animation-duration: 50s;
+    }
+
+    @keyframes geoRotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    /* Геометрические треугольники */
+    .geo-triangle {
+        position: absolute;
+        width: 0;
+        height: 0;
+        opacity: 0.12;
+    }
+
+    .geo-triangle.tri1 {
+        border-left: 150px solid transparent;
+        border-right: 150px solid transparent;
+        border-bottom: 260px solid #f7941d;
+        top: 20%;
+        left: 60%;
+        animation: geoFloat1 20s ease-in-out infinite;
+    }
+
+    .geo-triangle.tri2 {
+        border-left: 100px solid transparent;
+        border-right: 100px solid transparent;
+        border-bottom: 173px solid #ed1c24;
+        top: 60%;
+        left: 10%;
+        animation: geoFloat2 25s ease-in-out infinite;
+    }
+
+    .geo-triangle.tri3 {
+        border-left: 120px solid transparent;
+        border-right: 120px solid transparent;
+        border-bottom: 208px solid #be1e2d;
+        bottom: 10%;
+        right: 20%;
+        animation: geoFloat3 30s ease-in-out infinite;
+    }
+
+    @keyframes geoFloat1 {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); }
+        50% { transform: translate(30px, -40px) rotate(15deg); }
+    }
+
+    @keyframes geoFloat2 {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); }
+        50% { transform: translate(-40px, 30px) rotate(-20deg); }
+    }
+
+    @keyframes geoFloat3 {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); }
+        50% { transform: translate(50px, 20px) rotate(25deg); }
+    }
+
+    /* Пульсирующие круги */
+    .geo-circle {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.1;
+        animation: geoPulse 8s ease-in-out infinite;
+    }
+
+    .geo-circle.c1 {
+        width: 200px;
+        height: 200px;
+        background: #f7941d;
+        top: 30%;
+        left: 40%;
+        animation-delay: 0s;
+    }
+
+    .geo-circle.c2 {
+        width: 150px;
+        height: 150px;
+        background: #ed1c24;
+        top: 70%;
+        left: 70%;
+        animation-delay: 2s;
+    }
+
+    .geo-circle.c3 {
+        width: 180px;
+        height: 180px;
+        background: #be1e2d;
+        top: 10%;
+        right: 30%;
+        animation-delay: 4s;
+    }
+
+    @keyframes geoPulse {
+        0%, 100% { transform: scale(1); opacity: 0.1; }
+        50% { transform: scale(1.3); opacity: 0.15; }
+    }
+
+    /* ===== ТЁМНАЯ ТЕМА: СТАРЫЕ ЭЛЕМЕНТЫ ===== */
     .blob {
         position: fixed;
         border-radius: 50%;
@@ -79,7 +228,7 @@
         transition: opacity 0.6s ease;
     }
 
-    body.theme-dark .blob {
+    body.theme-light .blob {
         opacity: 0;
     }
 
@@ -148,7 +297,7 @@
         transition: opacity 0.6s ease;
     }
 
-    body.theme-dark .bubbles {
+    body.theme-light .bubbles {
         opacity: 0;
         pointer-events: none;
     }
@@ -243,11 +392,11 @@
     }
 
     body.theme-light header {
-        background: rgba(255, 255, 255, 0.25);
+        background: rgba(254, 254, 254, 0.9);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        border-bottom: 2px solid #ed1c24;
+        box-shadow: 0 4px 20px rgba(237, 28, 36, 0.1);
     }
 
     body.theme-dark header {
@@ -345,22 +494,22 @@
 
     body.theme-light nav a {
         color: #fff;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
 
     body.theme-light nav a.tab1 {
-        background: linear-gradient(135deg, #ff6a88 0%, #ff99ac 100%);
-        box-shadow: 0 6px 20px rgba(255, 106, 136, 0.45);
+        background: linear-gradient(135deg, #ed1c24 0%, #f7941d 100%);
+        box-shadow: 0 6px 20px rgba(237, 28, 36, 0.4);
     }
 
     body.theme-light nav a.tab2 {
-        background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
-        box-shadow: 0 6px 20px rgba(161, 140, 209, 0.45);
+        background: linear-gradient(135deg, #f7941d 0%, #fbb03b 100%);
+        box-shadow: 0 6px 20px rgba(247, 148, 29, 0.4);
     }
 
     body.theme-light nav a.tab3 {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.45);
+        background: linear-gradient(135deg, #be1e2d 0%, #ed1c24 100%);
+        box-shadow: 0 6px 20px rgba(190, 30, 45, 0.4);
     }
 
     body.theme-dark nav a {
@@ -395,8 +544,8 @@
     }
 
     body.theme-light .theme-toggle {
-        background: linear-gradient(135deg, #ffecd2, #fcb69f);
-        box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1), 0 0 15px rgba(252, 182, 159, 0.4);
+        background: linear-gradient(135deg, #f7941d, #ed1c24);
+        box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.2), 0 0 15px rgba(237, 28, 36, 0.3);
     }
 
     body.theme-dark .theme-toggle {
@@ -420,7 +569,7 @@
     body.theme-light .toggle-knob {
         left: 3px;
         background: #fff;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
     body.theme-dark .toggle-knob {
@@ -446,13 +595,13 @@
     }
 
     body.theme-light .description-inner {
-        background: rgba(255, 255, 255, 0.35);
+        background: rgba(255, 255, 255, 0.85);
         backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
         padding: 60px 50px;
         border-radius: 30px;
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+        border: 3px solid #ed1c24;
+        box-shadow: 0 20px 60px rgba(237, 28, 36, 0.15);
     }
 
     body.theme-dark .description-inner {
@@ -462,14 +611,14 @@
 
     .description h2 {
         font-size: 56px;
-        font-weight: 800;
+        font-weight: 900;
         margin-bottom: 24px;
         letter-spacing: -2px;
         transition: all 0.6s ease;
     }
 
     body.theme-light .description h2 {
-        background: linear-gradient(135deg, #ff6a88 0%, #a18cd1 50%, #667eea 100%);
+        background: linear-gradient(135deg, #ed1c24 0%, #f7941d 50%, #be1e2d 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -490,7 +639,7 @@
     }
 
     body.theme-light .description p {
-        color: #3d3d5c;
+        color: #2d2d4a;
     }
 
     body.theme-dark .description p {
@@ -515,8 +664,8 @@
     }
 
     body.theme-light .btn-start {
-        background: linear-gradient(135deg, #ff6a88 0%, #a18cd1 100%);
-        box-shadow: 0 8px 25px rgba(161, 140, 209, 0.4);
+        background: linear-gradient(135deg, #ed1c24 0%, #f7941d 100%);
+        box-shadow: 0 8px 25px rgba(237, 28, 36, 0.4);
     }
 
     body.theme-dark .btn-start {
@@ -544,7 +693,7 @@
     }
 
     body.theme-light .btn-start:hover {
-        box-shadow: 0 12px 35px rgba(161, 140, 209, 0.55);
+        box-shadow: 0 12px 35px rgba(237, 28, 36, 0.55);
     }
 
     body.theme-dark .btn-start:hover {
@@ -578,7 +727,7 @@
     }
 
     body.theme-light .scroll-hint span {
-        color: rgba(61, 61, 92, 0.5);
+        color: rgba(237, 28, 36, 0.6);
     }
 
     body.theme-dark .scroll-hint span {
@@ -595,8 +744,8 @@
     }
 
     body.theme-light .scroll-arrow {
-        border-right: 2px solid rgba(61, 61, 92, 0.4);
-        border-bottom: 2px solid rgba(61, 61, 92, 0.4);
+        border-right: 2px solid rgba(237, 28, 36, 0.5);
+        border-bottom: 2px solid rgba(237, 28, 36, 0.5);
     }
 
     body.theme-dark .scroll-arrow {
@@ -644,11 +793,11 @@
     }
 
     body.theme-light .selector-card {
-        background: rgba(255, 255, 255, 0.45);
+        background: rgba(255, 255, 255, 0.9);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.6);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        border: 3px solid #f7941d;
+        box-shadow: 0 20px 60px rgba(247, 148, 29, 0.2);
     }
 
     body.theme-dark .selector-card {
@@ -663,13 +812,13 @@
         font-size: 42px;
         margin-bottom: 12px;
         text-align: center;
-        font-weight: 800;
+        font-weight: 900;
         letter-spacing: -1px;
         transition: all 0.6s ease;
     }
 
     body.theme-light .department-selector h2 {
-        background: linear-gradient(135deg, #a18cd1 0%, #ff6a88 100%);
+        background: linear-gradient(135deg, #f7941d 0%, #ed1c24 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -716,8 +865,8 @@
     }
 
     body.theme-light select {
-        border: 2px solid rgba(255, 255, 255, 0.6);
-        background: rgba(255, 255, 255, 0.5);
+        border: 2px solid #f7941d;
+        background: rgba(255, 255, 255, 0.9);
         color: #2d2d4a;
     }
 
@@ -728,9 +877,9 @@
 
     body.theme-light select:focus {
         outline: none;
-        border-color: #a18cd1;
-        background: rgba(255, 255, 255, 0.8);
-        box-shadow: 0 0 0 4px rgba(161, 140, 209, 0.2);
+        border-color: #ed1c24;
+        background: rgba(255, 255, 255, 1);
+        box-shadow: 0 0 0 4px rgba(237, 28, 36, 0.2);
     }
 
     body.theme-dark select {
@@ -763,7 +912,7 @@
     }
 
     body.theme-light .select-wrapper::after {
-        color: #a18cd1;
+        color: #ed1c24;
     }
 
     body.theme-dark .select-wrapper::after {
@@ -788,10 +937,10 @@
     }
 
     body.theme-light .btn-continue {
-        background: linear-gradient(135deg, #ff6a88 0%, #a18cd1 50%, #667eea 100%);
+        background: linear-gradient(135deg, #ed1c24 0%, #f7941d 50%, #be1e2d 100%);
         background-size: 200% 200%;
-        box-shadow: 0 8px 25px rgba(161, 140, 209, 0.4);
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 8px 25px rgba(237, 28, 36, 0.4);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         animation: btnGradient 5s ease infinite;
     }
 
@@ -825,7 +974,7 @@
     }
 
     body.theme-light .btn-continue:hover:not(:disabled) {
-        box-shadow: 0 12px 35px rgba(161, 140, 209, 0.55);
+        box-shadow: 0 12px 35px rgba(237, 28, 36, 0.55);
     }
 
     body.theme-dark .btn-continue:hover:not(:disabled) {
@@ -833,7 +982,7 @@
     }
 
     body.theme-light .btn-continue:disabled {
-        background: rgba(255, 255, 255, 0.4);
+        background: rgba(200, 200, 200, 0.5);
         color: rgba(45, 45, 74, 0.4);
         cursor: not-allowed;
         box-shadow: none;
@@ -861,13 +1010,13 @@
     }
 
     body.theme-light .btn-back {
-        border-color: rgba(161, 140, 209, 0.4);
-        color: #a18cd1;
+        border-color: rgba(237, 28, 36, 0.4);
+        color: #ed1c24;
     }
 
     body.theme-light .btn-back:hover {
-        background: rgba(161, 140, 209, 0.1);
-        border-color: #a18cd1;
+        background: rgba(237, 28, 36, 0.1);
+        border-color: #ed1c24;
     }
 
     body.theme-dark .btn-back {
@@ -880,7 +1029,6 @@
         border-color: #7864ff;
     }
 
-    /* ===== БЛОК ЧАТА — БОЛЬШОЙ, РАСТЁТ ПО СОДЕРЖИМОМУ ===== */
     .chat-section {
         min-height: 100vh;
         padding: 120px 40px 80px;
@@ -903,15 +1051,14 @@
         padding: 40px;
         border-radius: 30px;
         transition: all 0.6s ease;
-        /* УБРАНА фиксированная высота — блок растёт по содержимому */
     }
 
     body.theme-light .chat-container {
-        background: rgba(255, 255, 255, 0.45);
+        background: rgba(255, 255, 255, 0.9);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.6);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        border: 3px solid #be1e2d;
+        box-shadow: 0 20px 60px rgba(190, 30, 45, 0.15);
     }
 
     body.theme-dark .chat-container {
@@ -932,8 +1079,8 @@
     }
 
     body.theme-light .person-card {
-        background: rgba(255, 255, 255, 0.6);
-        border: 1px solid rgba(255, 255, 255, 0.8);
+        background: rgba(255, 255, 255, 0.95);
+        border: 2px solid #f7941d;
     }
 
     body.theme-dark .person-card {
@@ -952,8 +1099,8 @@
     }
 
     body.theme-light .person-photo {
-        border-color: #a18cd1;
-        box-shadow: 0 8px 20px rgba(161, 140, 209, 0.3);
+        border-color: #ed1c24;
+        box-shadow: 0 8px 20px rgba(237, 28, 36, 0.3);
     }
 
     body.theme-dark .person-photo {
@@ -1005,7 +1152,7 @@
     }
 
     body.theme-light .chat-header {
-        background: linear-gradient(135deg, #a18cd1 0%, #ff6a88 100%);
+        background: linear-gradient(135deg, #ed1c24 0%, #f7941d 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -1034,16 +1181,16 @@
     }
 
     body.theme-light .message-input {
-        border: 2px solid rgba(255, 255, 255, 0.6);
-        background: rgba(255, 255, 255, 0.5);
+        border: 2px solid #f7941d;
+        background: rgba(255, 255, 255, 0.9);
         color: #2d2d4a;
     }
 
     body.theme-light .message-input:focus {
         outline: none;
-        border-color: #a18cd1;
-        background: rgba(255, 255, 255, 0.8);
-        box-shadow: 0 0 0 4px rgba(161, 140, 209, 0.2);
+        border-color: #ed1c24;
+        background: rgba(255, 255, 255, 1);
+        box-shadow: 0 0 0 4px rgba(237, 28, 36, 0.2);
     }
 
     body.theme-dark .message-input {
@@ -1073,8 +1220,8 @@
     }
 
     body.theme-light .btn-send {
-        background: linear-gradient(135deg, #ff6a88 0%, #a18cd1 100%);
-        box-shadow: 0 6px 20px rgba(161, 140, 209, 0.4);
+        background: linear-gradient(135deg, #ed1c24 0%, #f7941d 100%);
+        box-shadow: 0 6px 20px rgba(237, 28, 36, 0.4);
     }
 
     body.theme-dark .btn-send {
@@ -1087,7 +1234,7 @@
     }
 
     body.theme-light .btn-send:hover {
-        box-shadow: 0 10px 30px rgba(161, 140, 209, 0.55);
+        box-shadow: 0 10px 30px rgba(237, 28, 36, 0.55);
     }
 
     body.theme-dark .btn-send:hover {
@@ -1101,7 +1248,7 @@
     }
 
     body.theme-light .messages-divider {
-        background: linear-gradient(90deg, transparent, rgba(161, 140, 209, 0.3), transparent);
+        background: linear-gradient(90deg, transparent, rgba(237, 28, 36, 0.3), transparent);
     }
 
     body.theme-dark .messages-divider {
@@ -1120,12 +1267,12 @@
     }
 
     body.theme-light .messages-list::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.3);
+        background: rgba(247, 148, 29, 0.2);
         border-radius: 10px;
     }
 
     body.theme-light .messages-list::-webkit-scrollbar-thumb {
-        background: rgba(161, 140, 209, 0.5);
+        background: rgba(237, 28, 36, 0.5);
         border-radius: 10px;
     }
 
@@ -1148,8 +1295,8 @@
     }
 
     body.theme-light .message-item {
-        background: rgba(255, 255, 255, 0.6);
-        border: 1px solid rgba(255, 255, 255, 0.8);
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(247, 148, 29, 0.3);
     }
 
     body.theme-dark .message-item {
@@ -1193,13 +1340,13 @@
     }
 
     body.theme-light .toggle-btn {
-        border-color: rgba(161, 140, 209, 0.4);
-        color: #a18cd1;
+        border-color: rgba(237, 28, 36, 0.4);
+        color: #ed1c24;
     }
 
     body.theme-light .toggle-btn:hover {
-        background: rgba(161, 140, 209, 0.1);
-        border-color: #a18cd1;
+        background: rgba(237, 28, 36, 0.1);
+        border-color: #ed1c24;
     }
 
     body.theme-dark .toggle-btn {
@@ -1213,8 +1360,8 @@
     }
 
     .toggle-btn.active {
-        background: rgba(161, 140, 209, 0.2) !important;
-        border-color: #a18cd1 !important;
+        background: rgba(237, 28, 36, 0.15) !important;
+        border-color: #ed1c24 !important;
     }
 
     body.theme-dark .toggle-btn.active {
@@ -1239,12 +1386,12 @@
     }
 
     body.theme-light .info-content::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.3);
+        background: rgba(247, 148, 29, 0.2);
         border-radius: 10px;
     }
 
     body.theme-light .info-content::-webkit-scrollbar-thumb {
-        background: rgba(161, 140, 209, 0.5);
+        background: rgba(237, 28, 36, 0.5);
         border-radius: 10px;
     }
 
@@ -1285,9 +1432,9 @@
     body.theme-light .toast {
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.5);
+        border: 2px solid #ed1c24;
         color: #2d2d4a;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 10px 30px rgba(237, 28, 36, 0.2);
     }
 
     body.theme-dark .toast {
@@ -1350,9 +1497,10 @@
         }
 
         body.theme-light nav {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(20px);
-            box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
+            box-shadow: -5px 0 30px rgba(237, 28, 36, 0.15);
+            border-left: 3px solid #ed1c24;
         }
 
         body.theme-dark nav {
@@ -1387,28 +1535,30 @@
             left: 27px;
         }
 
-       .description {
-        min-height: auto;  /* Убрали 100vh */
-        padding: 120px 15px 40px;  /* Ещё меньше */
-    }
+        .description {
+            min-height: auto;
+            padding: 120px 15px 40px;
+        }
 
-    .description-inner {
-        padding: 30px 15px !important;
-    }
+        .description-inner {
+            max-width: 100% !important;
+            width: 100% !important;
+            padding: 30px 15px !important;
+        }
 
-    .description h2 {
-        font-size: 28px;  /* Ещё меньше */
-        margin-bottom: 16px;
-    }
+        .description h2 {
+            font-size: 28px;
+            margin-bottom: 16px;
+        }
 
-    .description p {
-        font-size: 15px;
-        line-height: 1.5;
-    }
+        .description p {
+            font-size: 15px;
+            line-height: 1.5;
+        }
 
         .btn-start {
-            padding: 16px 40px;
-            font-size: 16px;
+            padding: 14px 36px;
+            font-size: 15px;
         }
 
         .department-selector {
@@ -1447,7 +1597,6 @@
             height: 80px;
         }
 
-        /* Мобильный чат — тоже без фиксированной высоты */
         .chat-section {
             padding: 90px 16px 40px;
             min-height: 100vh;
@@ -1458,7 +1607,6 @@
             grid-template-columns: 1fr;
             padding: 20px;
             gap: 16px;
-            /* УБРАНА фиксированная высота */
         }
 
         .person-card {
@@ -1548,11 +1696,11 @@
         }
 
         .description h2 {
-            font-size: 32px;
+            font-size: 26px;
         }
 
         .description p {
-            font-size: 16px;
+            font-size: 14px;
         }
 
         .btn-start {
