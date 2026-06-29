@@ -1706,7 +1706,8 @@
     height: 50px;
     width: auto;
     transition: opacity 0.6s ease;
-}
+    mix-blend-mode: multiply; /* Убирает белый фон */
+    }
 
 /* Светлая тема - показываем чёрный логотип */
 body.theme-light .logo-light {
@@ -1723,7 +1724,8 @@ body.theme-dark .logo-light {
 }
 
 body.theme-dark .logo-dark {
-    display: block;
+    mix-blend-mode: screen;
+    filter: invert(1);
 }
 
 /* На мобильных уменьшаем логотип */
