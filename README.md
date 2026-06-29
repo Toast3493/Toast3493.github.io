@@ -355,16 +355,16 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .header-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 18px 40px;
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-        }
+.header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 18px 40px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
 
         .burger {
             display: none;
@@ -1695,6 +1695,50 @@
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* ===== ЛОГОТИП ===== */
+.logo-container {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.logo {
+    height: 50px;
+    width: auto;
+    transition: opacity 0.6s ease;
+}
+
+/* Светлая тема - показываем чёрный логотип */
+body.theme-light .logo-light {
+    display: block;
+}
+
+body.theme-light .logo-dark {
+    display: none;
+}
+
+/* Тёмная тема - показываем белый логотип */
+body.theme-dark .logo-light {
+    display: none;
+}
+
+body.theme-dark .logo-dark {
+    display: block;
+}
+
+/* На мобильных уменьшаем логотип */
+@media (max-width: 768px) {
+    .logo {
+        height: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo {
+        height: 35px;
+    }
+}
     </style>
 </head>
 <body class="theme-light locked">
@@ -1722,6 +1766,10 @@
 
     <header>
         <div class="header-inner">
+                <div class="logo-container">
+            <img src="logo-light.png" alt="Логотип" class="logo logo-light">
+            <img src="logo-dark.png" alt="Логотип" class="logo logo-dark">
+        </div>
             <div class="burger" id="burger">
                 <span></span>
                 <span></span>
