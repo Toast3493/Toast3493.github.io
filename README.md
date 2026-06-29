@@ -363,6 +363,7 @@
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
+    background: transparent !important; /* Добавь эту строку */
 }
 
         .burger {
@@ -1695,23 +1696,31 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== ЛОГОТИП ===== */
+   /* ===== ЛОГОТИП ===== */
 .logo-container {
     display: flex;
     align-items: center;
     flex-shrink: 0;
+    background: transparent !important; /* Убираем фон контейнера */
 }
 
 .logo {
     height: 50px;
     width: auto;
     transition: opacity 0.6s ease;
-    mix-blend-mode: multiply; /* Убирает белый фон */
-    }
+    background: transparent !important; /* Убираем фон изображения */
+    border: none !important;
+}
+
+/* Принудительно убираем фон у SVG/PNG */
+.logo img {
+    background: transparent !important;
+}
 
 /* Светлая тема - показываем чёрный логотип */
 body.theme-light .logo-light {
     display: block;
+    opacity: 1;
 }
 
 body.theme-light .logo-dark {
@@ -1724,8 +1733,8 @@ body.theme-dark .logo-light {
 }
 
 body.theme-dark .logo-dark {
-    mix-blend-mode: screen;
-    filter: invert(1);
+    display: block;
+    opacity: 1;
 }
 
 /* На мобильных уменьшаем логотип */
@@ -1769,10 +1778,10 @@ body.theme-dark .logo-dark {
         <div class="header-inner">
                 <div class="logo-container">
             <!-- Для светлой темы (чёрный логотип) -->
-<img src="https://raw.githubusercontent.com/Toast3493/Toast3493.github.io/main/logo-dark.svg" alt="Логотип" class="logo logo-light">
+<img src="https://raw.githubusercontent.com/Toast3493/Toast3493.github.io/main/logo-dark.png" alt="Логотип" class="logo logo-light">
 
 <!-- Для тёмной темы (белый логотип) -->
-<img src="https://raw.githubusercontent.com/Toast3493/Toast3493.github.io/main/logo-light.svg" alt="Логотип" class="logo logo-dark">
+<img src="https://raw.githubusercontent.com/Toast3493/Toast3493.github.io/main/logo-light.png" alt="Логотип" class="logo logo-dark">
         </div>
             <div class="burger" id="burger">
                 <span></span>
