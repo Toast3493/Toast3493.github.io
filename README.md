@@ -1388,25 +1388,22 @@
         }
 
        .description {
-        padding: 100px 20px 60px;
+        min-height: auto;  /* Убрали 100vh */
+        padding: 120px 15px 40px;  /* Ещё меньше */
     }
 
     .description-inner {
-        max-width: 100% !important;  /* Было 800px */
-        width: 100% !important;       /* Добавлено */
-        padding: 30px 20px !important; /* Уменьшен padding */
+        padding: 30px 15px !important;
     }
 
     .description h2 {
-        font-size: 32px;  /* Было 36px */
-        margin-bottom: 20px;
-        word-wrap: break-word;  /* Добавлено */
+        font-size: 28px;  /* Ещё меньше */
+        margin-bottom: 16px;
     }
 
     .description p {
-        font-size: 16px;  /* Было 17px */
-        line-height: 1.6;  /* Добавлено */
-        word-wrap: break-word;  /* Добавлено */
+        font-size: 15px;
+        line-height: 1.5;
     }
 
         .btn-start {
