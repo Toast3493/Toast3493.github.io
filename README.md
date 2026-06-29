@@ -1677,7 +1677,7 @@
     <div class="chat-section" id="chatSection1">
         <div class="chat-container">
             <div class="person-card">
-                <img src="/thumb/2/gXQcP0bXfQtR2pkVEMnBug/1024r/d/xxxx9283_311447.jpg" alt="Фото" class="person-photo">
+                <img src="https://i.pinimg.com/736x/89/64/c4/8964c4609918bc8d43f288ad572d1e55.jpg" alt="Фото" class="person-photo">
                 <div class="person-name">Левтер Татьяна Владимировна</div>
             </div>
 
