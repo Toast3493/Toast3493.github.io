@@ -2094,116 +2094,117 @@
   measurementId: "G-5R4SZ4B19R"
 };
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-        // ===== УТИЛИТЫ =====
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
+    // ===== УТИЛИТЫ =====
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
 
-        function formatTimestamp(ts) {
-            if (!ts) return '';
-            const date = ts.toDate ? ts.toDate() : new Date(ts);
-            const now = new Date();
-            const diff = now - date;
-            const minutes = Math.floor(diff / 60000);
-            const hours = Math.floor(diff / 3600000);
-            const days = Math.floor(diff / 86400000);
+    function formatTimestamp(ts) {
+        if (!ts) return '';
+        const date = ts.toDate ? ts.toDate() : new Date(ts);
+        const now = new Date();
+        const diff = now - date;
+        const minutes = Math.floor(diff / 60000);
+        const hours = Math.floor(diff / 3600000);
+        const days = Math.floor(diff / 86400000);
 
-            if (minutes < 1) return 'только что';
-            if (minutes < 60) return `${minutes} мин. назад`;
-            if (hours < 24) return `${hours} ч. назад`;
-            if (days < 7) return `${days} дн. назад`;
-            return date.toLocaleDateString('ru-RU');
-        }
+        if (minutes < 1) return 'только что';
+        if (minutes < 60) return `${minutes} мин. назад`;
+        if (hours < 24) return `${hours} ч. назад`;
+        if (days < 7) return `${days} дн. назад`;
+        return date.toLocaleDateString('ru-RU');
+    }
 
-        // ===== ЗАГРУЗКА СООБЩЕНИЙ =====
-        function loadMessages(chatNum) {
-            const list = document.getElementById('messagesList' + chatNum);
-            const collectionName = 'messages' + chatNum;
+    // ===== ЗАГРУЗКА СООБЩЕНИЙ =====
+    function loadMessages(chatNum) {
+        const list = document.getElementById('messagesList' + chatNum);
+        if (!list) return;
+        
+        const collectionName = 'messages' + chatNum;
+        list.innerHTML = '<div class="loading-spinner">Загрузка сообщений...</div>';
 
-            list.innerHTML = '<div class="loading-spinner">Загрузка сообщений...</div>';
+        db.collection(collectionName)
+            .orderBy('timestamp', 'desc')
+            .onSnapshot((snapshot) => {
+                list.innerHTML = '';
 
-            db.collection(collectionName)
-                .orderBy('timestamp', 'desc')
-                .onSnapshot((snapshot) => {
-                    list.innerHTML = '';
+                if (snapshot.empty) {
+                    list.innerHTML = '<div class="loading-spinner">Пока нет сообщений. Будьте первым!</div>';
+                    return;
+                }
 
-                    if (snapshot.empty) {
-                        list.innerHTML = '<div class="loading-spinner">Пока нет сообщений. Будьте первым!</div>';
-                        return;
-                    }
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const item = document.createElement('div');
+                    item.className = 'message-item';
 
-                    snapshot.forEach(doc => {
-                        const data = doc.data();
-                        const item = document.createElement('div');
-                        item.className = 'message-item';
+                    const author = data.author || 'Аноним';
+                    const timeStr = data.timestamp ? formatTimestamp(data.timestamp) : '';
+                    const timeHtml = timeStr ? `<div class="message-time">${timeStr}</div>` : '';
 
-                        const author = data.author || 'Аноним';
-                        const timeStr = data.timestamp ? formatTimestamp(data.timestamp) : '';
-                        const timeHtml = timeStr ? `<div class="message-time">${timeStr}</div>` : '';
-
-                        item.innerHTML = `
-                            <div class="message-author">${escapeHtml(author)}</div>
-                            <div class="message-text">${escapeHtml(data.text || '')}</div>
-                            ${timeHtml}
-                        `;
-                        list.appendChild(item);
-                    });
-                }, (error) => {
-                    console.error('Ошибка загрузки сообщений:', error);
-                    list.innerHTML = '<div class="loading-spinner">⚠️ Ошибка загрузки</div>';
+                    item.innerHTML = `
+                        <div class="message-author">${escapeHtml(author)}</div>
+                        <div class="message-text">${escapeHtml(data.text || '')}</div>
+                        ${timeHtml}
+                    `;
+                    list.appendChild(item);
                 });
+            }, (error) => {
+                console.error('Ошибка загрузки сообщений:', error);
+                list.innerHTML = '<div class="loading-spinner">⚠️ Ошибка загрузки</div>';
+            });
+    }
+
+    // ===== ОТПРАВКА СООБЩЕНИЯ =====
+    async function sendMessageToFirebase(chatNum, text, author) {
+        const collectionName = 'messages' + chatNum;
+        try {
+            await db.collection(collectionName).add({
+                text: text,
+                author: author || 'Аноним',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            return { success: true };
+        } catch (error) {
+            console.error('Ошибка отправки:', error);
+            return { success: false, error: error.message };
         }
+    }
 
-        // ===== ОТПРАВКА СООБЩЕНИЯ =====
-        async function sendMessageToFirebase(chatNum, text, author) {
-            const collectionName = 'messages' + chatNum;
-            try {
-                await db.collection(collectionName).add({
-                    text: text,
-                    author: author || 'Аноним',
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                return { success: true };
-            } catch (error) {
-                console.error('Ошибка отправки:', error);
-                return { success: false, error: error.message };
-            }
+    loadMessages(1);
+    loadMessages(2);
+    loadMessages(3);
+
+    // ===== ГРАНИЦА СКРОЛЛА =====
+    let scrollBoundaryTop = 0;
+    let isChatPage = false;
+
+    window.addEventListener('scroll', () => {
+        if (!isChatPage) return;
+        if (window.scrollY < scrollBoundaryTop) {
+            window.scrollTo(0, scrollBoundaryTop);
         }
+    }, { passive: true });
 
-        // Загружаем сообщения для всех трёх чатов
-        loadMessages(1);
-        loadMessages(2);
-        loadMessages(3);
+    function setScrollBoundary() {
+        scrollBoundaryTop = window.scrollY;
+        isChatPage = true;
+    }
 
-        // ===== ГРАНИЦА СКРОЛЛА =====
-        let scrollBoundaryTop = 0;
-        let isChatPage = false;
+    function clearScrollBoundary() {
+        isChatPage = false;
+    }
 
-        window.addEventListener('scroll', () => {
-            if (!isChatPage) return;
-            if (window.scrollY < scrollBoundaryTop) {
-                window.scrollTo(0, scrollBoundaryTop);
-            }
-        }, { passive: true });
+    // ===== НАВИГАЦИЯ =====
+    const burger = document.getElementById('burger');
+    const nav = document.getElementById('nav');
 
-        function setScrollBoundary() {
-            scrollBoundaryTop = window.scrollY;
-            isChatPage = true;
-        }
-
-        function clearScrollBoundary() {
-            isChatPage = false;
-        }
-
-        // ===== НАВИГАЦИЯ =====
-        const burger = document.getElementById('burger');
-        const nav = document.getElementById('nav');
-
+    if (burger && nav) {
         burger.addEventListener('click', () => {
             burger.classList.toggle('active');
             nav.classList.toggle('active');
@@ -2215,64 +2216,69 @@
                 nav.classList.remove('active');
             });
         });
+    }
 
-        // ===== ТЕМА =====
-        const body = document.body;
-        const themeToggle = document.getElementById('themeToggle');
-        const toggleKnob = document.getElementById('toggleKnob');
+    // ===== ТЕМА =====
+    const body = document.body;
+    const themeToggle = document.getElementById('themeToggle');
+    const toggleKnob = document.getElementById('toggleKnob');
 
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        setTheme(savedTheme);
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
 
+    if (themeToggle) {
         themeToggle.addEventListener('click', () => {
             const newTheme = body.classList.contains('theme-light') ? 'dark' : 'light';
             setTheme(newTheme);
             localStorage.setItem('theme', newTheme);
         });
+    }
 
-        function setTheme(theme) {
-            body.classList.remove('theme-light', 'theme-dark');
-            body.classList.add('theme-' + theme);
-            updateWaveColors(theme);
+    function setTheme(theme) {
+        body.classList.remove('theme-light', 'theme-dark');
+        body.classList.add('theme-' + theme);
+        updateWaveColors(theme);
+    }
+
+    function updateWaveColors(theme) {
+        const path1 = document.querySelector('.wave-path-1');
+        const path2 = document.querySelector('.wave-path-2');
+        if (theme === 'light') {
+            if (path1) path1.setAttribute('fill', 'rgba(237, 28, 36, 0.2)');
+            if (path2) path2.setAttribute('fill', 'rgba(247, 148, 29, 0.3)');
+        } else {
+            if (path1) path1.setAttribute('fill', 'rgba(120, 100, 255, 0.1)');
+            if (path2) path2.setAttribute('fill', 'rgba(100, 200, 255, 0.15)');
         }
+    }
+    updateWaveColors(savedTheme);
 
-        function updateWaveColors(theme) {
-            const path1 = document.querySelector('.wave-path-1');
-            const path2 = document.querySelector('.wave-path-2');
-            if (theme === 'light') {
-                path1.setAttribute('fill', 'rgba(237, 28, 36, 0.2)');
-                path2.setAttribute('fill', 'rgba(247, 148, 29, 0.3)');
-            } else {
-                path1.setAttribute('fill', 'rgba(120, 100, 255, 0.1)');
-                path2.setAttribute('fill', 'rgba(100, 200, 255, 0.15)');
-            }
-        }
-        updateWaveColors(savedTheme);
+    // ===== ПЕРЕХОДЫ МЕЖДУ БЛОКАМИ =====
+    const backBtn = document.getElementById('backBtn');
+    const continueBtn = document.getElementById('continueBtn');
+    const departmentSelect = document.getElementById('departmentSelect');
+    const chatSection1 = document.getElementById('chatSection1');
+    const chatSection2 = document.getElementById('chatSection2');
+    const chatSection3 = document.getElementById('chatSection3');
+    const navStart = document.getElementById('navStart');
 
-        // ===== ПЕРЕХОДЫ МЕЖДУ БЛОКАМИ =====
-        const startBtn = document.getElementById('startBtn');
-        const backBtn = document.getElementById('backBtn');
-        const continueBtn = document.getElementById('continueBtn');
-        const departmentSelect = document.getElementById('departmentSelect');
-        const chatSection1 = document.getElementById('chatSection1');
-        const chatSection2 = document.getElementById('chatSection2');
-        const chatSection3 = document.getElementById('chatSection3');
+    function lockScroll() {
+        body.classList.add('locked');
+    }
 
-        function lockScroll() {
-            body.classList.add('locked');
-        }
+    function unlockScroll() {
+        body.classList.remove('locked');
+    }
 
-        function unlockScroll() {
-            body.classList.remove('locked');
-        }
+    function hideAllChats() {
+        if (chatSection1) chatSection1.classList.remove('visible');
+        if (chatSection2) chatSection2.classList.remove('visible');
+        if (chatSection3) chatSection3.classList.remove('visible');
+    }
 
-        function hideAllChats() {
-            chatSection1.classList.remove('visible');
-            chatSection2.classList.remove('visible');
-            chatSection3.classList.remove('visible');
-        }
-
-        document.getElementById('navStart').addEventListener('click', (e) => {
+    // Кнопка "ГУП Московский метрополитен" в навигации
+    if (navStart) {
+        navStart.addEventListener('click', (e) => {
             e.preventDefault();
             clearScrollBoundary();
             unlockScroll();
@@ -2281,16 +2287,10 @@
                 setTimeout(() => { lockScroll(); }, 800);
             }, 100);
         });
+    }
 
-        startBtn.addEventListener('click', () => {
-            clearScrollBoundary();
-            unlockScroll();
-            setTimeout(() => {
-                document.getElementById('department-selector').scrollIntoView({ behavior: 'smooth' });
-                setTimeout(() => { lockScroll(); }, 800);
-            }, 100);
-        });
-
+    // Кнопка "Вернуться назад" (из выбора подразделения на главную)
+    if (backBtn) {
         backBtn.addEventListener('click', () => {
             clearScrollBoundary();
             unlockScroll();
@@ -2300,23 +2300,28 @@
                 setTimeout(() => { lockScroll(); }, 800);
             }, 100);
         });
+    }
 
-        document.querySelectorAll('.back-from-chat').forEach(btn => {
-            btn.addEventListener('click', () => {
-                clearScrollBoundary();
-                unlockScroll();
-                hideAllChats();
-                setTimeout(() => {
-                    document.getElementById('department-selector').scrollIntoView({ behavior: 'smooth' });
-                    setTimeout(() => { lockScroll(); }, 800);
-                }, 100);
-            });
+    // Кнопки "Вернуться к выбору подразделения" (из чатов)
+    document.querySelectorAll('.back-from-chat').forEach(btn => {
+        btn.addEventListener('click', () => {
+            clearScrollBoundary();
+            unlockScroll();
+            hideAllChats();
+            setTimeout(() => {
+                document.getElementById('department-selector').scrollIntoView({ behavior: 'smooth' });
+                setTimeout(() => { lockScroll(); }, 800);
+            }, 100);
         });
+    });
 
+    // Активация кнопки "Продолжить" при выборе подразделения
+    if (departmentSelect && continueBtn) {
         departmentSelect.addEventListener('change', () => {
             continueBtn.disabled = !departmentSelect.value;
         });
 
+        // Переход к чату
         continueBtn.addEventListener('click', () => {
             if (!departmentSelect.value) return;
 
@@ -2332,120 +2337,144 @@
             } else if (departmentSelect.value === 'dept3') {
                 activeChat = chatSection3;
             } else {
-                alert('Переход на страницу: ' + departmentSelect.value);
+                alert('Этот раздел в разработке');
                 lockScroll();
                 return;
             }
 
-            activeChat.classList.add('visible');
-
-            setTimeout(() => {
-                activeChat.scrollIntoView({ behavior: 'smooth' });
-                setTimeout(() => { setScrollBoundary(); }, 900);
-            }, 100);
+            if (activeChat) {
+                activeChat.classList.add('visible');
+                setTimeout(() => {
+                    activeChat.scrollIntoView({ behavior: 'smooth' });
+                    setTimeout(() => { setScrollBoundary(); }, 900);
+                }, 100);
+            }
         });
+    }
 
-        // ===== ОТПРАВКА СООБЩЕНИЙ =====
-        document.querySelectorAll('.btn-send').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                const chatNum = btn.dataset.chat;
-                const input = document.getElementById('messageInput' + chatNum);
-                const authorInput = document.getElementById('authorInput' + chatNum);
-                const text = input.value.trim();
+    // ===== ОТПРАВКА СООБЩЕНИЙ =====
+    document.querySelectorAll('.btn-send').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const chatNum = btn.dataset.chat;
+            const input = document.getElementById('messageInput' + chatNum);
+            const authorInput = document.getElementById('authorInput' + chatNum);
+            const text = input.value.trim();
 
-                if (!text) {
-                    showToast('Пожалуйста, введите сообщение');
-                    return;
-                }
+            if (!text) {
+                showToast('Пожалуйста, введите сообщение');
+                return;
+            }
 
-                const author = authorInput ? authorInput.value.trim() : '';
+            const author = authorInput ? authorInput.value.trim() : '';
 
-                const originalText = btn.textContent;
-                btn.disabled = true;
-                btn.textContent = 'Отправка...';
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Отправка...';
 
-                const result = await sendMessageToFirebase(chatNum, text, author);
+            const result = await sendMessageToFirebase(chatNum, text, author);
 
-                if (result.success) {
-                    input.value = '';
-                    setTimeout(() => {
-                        showToast('✅ Сообщение отправлено!');
-                    }, 300);
-                } else {
-                    showToast('❌ Ошибка отправки');
-                }
+            if (result.success) {
+                input.value = '';
+                setTimeout(() => {
+                    showToast('✅ Сообщение отправлено!');
+                }, 300);
+            } else {
+                showToast('❌ Ошибка отправки');
+            }
 
-                btn.disabled = false;
-                btn.textContent = originalText;
-            });
+            btn.disabled = false;
+            btn.textContent = originalText;
         });
+    });
 
-        // ===== TOGGLE КНОПКИ =====
-        document.getElementById('toggleInfo1').addEventListener('click', function() {
+    // ===== TOGGLE КНОПКИ =====
+    const toggleInfo1 = document.getElementById('toggleInfo1');
+    const toggleChat1 = document.getElementById('toggleChat1');
+    const toggleInfo2 = document.getElementById('toggleInfo2');
+    const toggleChat2 = document.getElementById('toggleChat2');
+    const toggleInfo3 = document.getElementById('toggleInfo3');
+    const toggleChat3 = document.getElementById('toggleChat3');
+
+    if (toggleInfo1) {
+        toggleInfo1.addEventListener('click', function() {
             document.getElementById('infoSection1').classList.toggle('hidden-section');
             this.classList.toggle('active');
             this.textContent = this.classList.contains('active') ? '👤 Скрыть информацию' : '👤 Показать информацию о председателе';
         });
+    }
 
-        document.getElementById('toggleChat1').addEventListener('click', function() {
+    if (toggleChat1) {
+        toggleChat1.addEventListener('click', function() {
             document.getElementById('chatInputSection1').classList.toggle('hidden-section');
             this.classList.toggle('active');
-            this.textContent = this.classList.contains('active') ? '💬 Скрыть чат' : '💬 Открыть чат';
+            this.textContent = this.classList.contains('active') ? '💬 Скрыть чат' : '💬 Добавить сообщение';
         });
+    }
 
-        document.getElementById('toggleInfo2').addEventListener('click', function() {
+    if (toggleInfo2) {
+        toggleInfo2.addEventListener('click', function() {
             document.getElementById('infoSection2').classList.toggle('hidden-section');
             this.classList.toggle('active');
             this.textContent = this.classList.contains('active') ? '👤 Скрыть информацию' : '👤 Показать информацию о председателе';
         });
+    }
 
-        document.getElementById('toggleChat2').addEventListener('click', function() {
+    if (toggleChat2) {
+        toggleChat2.addEventListener('click', function() {
             document.getElementById('chatInputSection2').classList.toggle('hidden-section');
             this.classList.toggle('active');
-            this.textContent = this.classList.contains('active') ? '💬 Скрыть чат' : ' Открыть чат';
+            this.textContent = this.classList.contains('active') ? '💬 Скрыть чат' : '💬 Добавить сообщение';
         });
+    }
 
-        document.getElementById('toggleInfo3').addEventListener('click', function() {
+    if (toggleInfo3) {
+        toggleInfo3.addEventListener('click', function() {
             document.getElementById('infoSection3').classList.toggle('hidden-section');
             this.classList.toggle('active');
-            this.textContent = this.classList.contains('active') ? '👤 Скрыть информацию' : ' Показать информацию';
+            this.textContent = this.classList.contains('active') ? '👤 Скрыть информацию' : '👤 Показать информацию';
         });
+    }
 
-        document.getElementById('toggleChat3').addEventListener('click', function() {
+    if (toggleChat3) {
+        toggleChat3.addEventListener('click', function() {
             document.getElementById('chatInputSection3').classList.toggle('hidden-section');
             this.classList.toggle('active');
-            this.textContent = this.classList.contains('active') ? '💬 Скрыть чат' : '💬 Открыть чат';
+            this.textContent = this.classList.contains('active') ? '💬 Скрыть чат' : '💬 Добавить сообщение';
         });
+    }
 
-        // ===== ПУЗЫРЬКИ =====
-        function createBubbles() {
-            const container = document.getElementById('bubbles');
-            const count = 25;
-            for (let i = 0; i < count; i++) {
-                const bubble = document.createElement('div');
-                bubble.className = 'bubble';
-                const size = Math.random() * 40 + 10;
-                bubble.style.width = size + 'px';
-                bubble.style.height = size + 'px';
-                bubble.style.left = Math.random() * 100 + '%';
-                bubble.style.animationDuration = (Math.random() * 10 + 8) + 's';
-                bubble.style.animationDelay = Math.random() * 10 + 's';
-                container.appendChild(bubble);
-            }
+    // ===== ПУЗЫРЬКИ =====
+    function createBubbles() {
+        const container = document.getElementById('bubbles');
+        if (!container) return;
+        const count = 25;
+        for (let i = 0; i < count; i++) {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            const size = Math.random() * 40 + 10;
+            bubble.style.width = size + 'px';
+            bubble.style.height = size + 'px';
+            bubble.style.left = Math.random() * 100 + '%';
+            bubble.style.animationDuration = (Math.random() * 10 + 8) + 's';
+            bubble.style.animationDelay = Math.random() * 10 + 's';
+            container.appendChild(bubble);
         }
-        createBubbles();
+    }
+    createBubbles();
 
-        // ===== ЗВЁЗДЫ =====
-        const canvas = document.getElementById('starCanvas');
-        const ctx = canvas.getContext('2d');
+    // ===== ЗВЁЗДЫ =====
+    const canvas = document.getElementById('starCanvas');
+    const ctx = canvas ? canvas.getContext('2d') : null;
 
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        resize();
-        window.addEventListener('resize', resize);
+    function resize() {
+        if (!canvas) return;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
 
+    if (ctx) {
         class Star {
             constructor() { this.reset(); }
             reset() {
@@ -2539,41 +2568,45 @@
             requestAnimationFrame(animate);
         }
         animate();
+    }
 
-        // ===== TOAST =====
-        const toast = document.getElementById('toast');
-        let toastTimeout = null;
+    // ===== TOAST =====
+    const toast = document.getElementById('toast');
+    let toastTimeout = null;
 
-        function showToast(message) {
-            if (toastTimeout) {
-                clearTimeout(toastTimeout);
-                toastTimeout = null;
-            }
-            
-            toast.textContent = message;
-            toast.classList.remove('hide');
-            toast.classList.add('show');
-            
-            const duration = window.innerWidth <= 768 ? 2000 : 3000;
-            
-            toastTimeout = setTimeout(() => {
-                toast.classList.remove('show');
-                toast.classList.add('hide');
-                
-                setTimeout(() => {
-                    if (!toast.classList.contains('show')) {
-                        toast.classList.remove('hide');
-                    }
-                }, 500);
-            }, duration);
+    function showToast(message) {
+        if (!toast) return;
+        
+        if (toastTimeout) {
+            clearTimeout(toastTimeout);
+            toastTimeout = null;
         }
+        
+        toast.textContent = message;
+        toast.classList.remove('hide');
+        toast.classList.add('show');
+        
+        const duration = window.innerWidth <= 768 ? 2000 : 3000;
+        
+        toastTimeout = setTimeout(() => {
+            toast.classList.remove('show');
+            toast.classList.add('hide');
+            
+            setTimeout(() => {
+                if (!toast.classList.contains('show')) {
+                    toast.classList.remove('hide');
+                }
+            }, 500);
+        }, duration);
+    }
 
-        document.querySelectorAll('.fake-tab').forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                e.preventDefault();
-                showToast(tab.dataset.msg);
-            });
+    // Toast для "ОАО РЖД" (fake-tab)
+    document.querySelectorAll('.fake-tab').forEach(tab => {
+        tab.addEventListener('click', (e) => {
+            e.preventDefault();
+            showToast(tab.dataset.msg);
         });
-    </script>
+    });
+</script>
 </body>
 </html>
