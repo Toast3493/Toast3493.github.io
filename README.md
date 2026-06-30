@@ -2004,7 +2004,6 @@
                         <textarea class="message-input" id="messageInput1" placeholder="Напишите ваше пожелание или благодарность..."></textarea>
                     </div>
                     <button class="btn-send" data-chat="1">Отправить сообщение</button>
-                    <button class="toggle-btn active" onclick="document.getElementById('chatInputSection1').classList.add('hidden-section'); document.getElementById('toggleChat1').classList.remove('active'); document.getElementById('toggleChat1').textContent='💬 Добавить сообщение'">Скрыть</button>
                 </div>
 
                 <div class="messages-divider"></div>
@@ -2048,7 +2047,6 @@
                         <textarea class="message-input" id="messageInput2" placeholder="Напишите ваше пожелание или благодарность..."></textarea>
                     </div>
                     <button class="btn-send" data-chat="2">Отправить сообщение</button>
-                    <button class="toggle-btn active" onclick="document.getElementById('chatInputSection2').classList.add('hidden-section'); document.getElementById('toggleChat2').classList.remove('active'); document.getElementById('toggleChat2').textContent='💬 Добавить сообщение'">Скрыть</button>
                 </div>
 
                 <div class="messages-divider"></div>
@@ -2092,7 +2090,6 @@
                         <textarea class="message-input" id="messageInput3" placeholder="Напишите ваше пожелание или благодарность..."></textarea>
                     </div>
                     <button class="btn-send" data-chat="3">Отправить сообщение</button>
-                    <button class="toggle-btn active" onclick="document.getElementById('chatInputSection3').classList.add('hidden-section'); document.getElementById('toggleChat3').classList.remove('active'); document.getElementById('toggleChat3').textContent='💬 Добавить сообщение'">Скрыть</button>
                 </div>
 
                 <div class="messages-divider"></div>
@@ -2108,17 +2105,17 @@
 
     <div class="toast" id="toast"></div>
 
-    <script>
+<script>
     // ===== FIREBASE КОНФИГУРАЦИЯ =====
-        const firebaseConfig = {
-  apiKey: "AIzaSyB5PeNgXrAPyW8qnfEvPSnB4qa_GCE1Dfo",
-  authDomain: "wiki-profcom.firebaseapp.com",
-  projectId: "wiki-profcom",
-  storageBucket: "wiki-profcom.firebasestorage.app",
-  messagingSenderId: "789513290691",
-  appId: "1:789513290691:web:40e2ebc7b3611ac9b83376",
-  measurementId: "G-5R4SZ4B19R"
-};
+    const firebaseConfig = {
+        apiKey: "AIzaSyB5PeNgXrAPyW8qnfEvPSnB4qa_GCE1Dfo",
+        authDomain: "wiki-profcom.firebaseapp.com",
+        projectId: "wiki-profcom",
+        storageBucket: "wiki-profcom.firebasestorage.app",
+        messagingSenderId: "789513290691",
+        appId: "1:789513290691:web:40e2ebc7b3611ac9b83376",
+        measurementId: "G-5R4SZ4B19R"
+    };
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
@@ -2217,8 +2214,11 @@
         }
     }, { passive: true });
 
-    function setScrollBoundary() {
-        scrollBoundaryTop = window.scrollY;
+    // Теперь функция принимает элемент чата и устанавливает границу выше
+    function setScrollBoundary(chatElement) {
+        // Устанавливаем границу на 120px выше верха чата
+        // Это позволит видеть шапку чата (фото, имя, заголовок)
+        scrollBoundaryTop = chatElement.offsetTop - 120;
         isChatPage = true;
     }
 
@@ -2372,7 +2372,10 @@
                 activeChat.classList.add('visible');
                 setTimeout(() => {
                     activeChat.scrollIntoView({ behavior: 'smooth' });
-                    setTimeout(() => { setScrollBoundary(); }, 900);
+                    setTimeout(() => { 
+                        // Передаём элемент чата в функцию
+                        setScrollBoundary(activeChat); 
+                    }, 900);
                 }, 100);
             }
         });
@@ -2433,7 +2436,7 @@
         toggleChat1.addEventListener('click', function() {
             document.getElementById('chatInputSection1').classList.toggle('hidden-section');
             this.classList.toggle('active');
-            this.textContent = this.classList.contains('active') ? '💬 Скрыть чат' : '💬 Добавить сообщение';
+            this.textContent = this.classList.contains('active') ? '💬 Скрыть' : '💬 Добавить сообщение';
         });
     }
 
@@ -2449,7 +2452,7 @@
         toggleChat2.addEventListener('click', function() {
             document.getElementById('chatInputSection2').classList.toggle('hidden-section');
             this.classList.toggle('active');
-            this.textContent = this.classList.contains('active') ? '💬 Скрыть чат' : '💬 Добавить сообщение';
+            this.textContent = this.classList.contains('active') ? '💬 Скрыть' : '💬 Добавить сообщение';
         });
     }
 
@@ -2465,7 +2468,7 @@
         toggleChat3.addEventListener('click', function() {
             document.getElementById('chatInputSection3').classList.toggle('hidden-section');
             this.classList.toggle('active');
-            this.textContent = this.classList.contains('active') ? '💬 Скрыть чат' : '💬 Добавить сообщение';
+            this.textContent = this.classList.contains('active') ? '💬 Скрыть' : '💬 Добавить сообщение';
         });
     }
 
