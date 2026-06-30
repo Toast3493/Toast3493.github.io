@@ -1866,6 +1866,32 @@
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* ===== УБИРАЕМ ССЫЛКИ С ЗАГОЛОВКОВ ===== */
+.description h2,
+.department-selector h2 {
+    cursor: default !important;
+    pointer-events: none !important;
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+.description h2::after,
+.description h2::before,
+.department-selector h2::after,
+.department-selector h2::before {
+    display: none !important;
+    content: none !important;
+    visibility: hidden !important;
+}
+
+.description h2 a,
+.department-selector h2 a {
+    pointer-events: none !important;
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
     </style>
 </head>
 <body class="theme-light locked">
