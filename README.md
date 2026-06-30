@@ -1892,6 +1892,176 @@
     color: inherit !important;
 }
 
+/* ===== EMOJI PICKER ===== */
+.emoji-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.emoji-btn:hover {
+    background: rgba(237, 28, 36, 0.1);
+    transform: scale(1.15);
+}
+
+body.theme-dark .emoji-btn:hover {
+    background: rgba(120, 100, 255, 0.2);
+}
+
+.emoji-input-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    margin-bottom: 20px;
+}
+
+.emoji-input-row .message-input-wrapper {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.emoji-popup {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    width: 320px;
+    max-height: 280px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 12px;
+    z-index: 300;
+    display: none;
+    overflow-y: auto;
+    animation: emojiSlideUp 0.2s ease;
+}
+
+body.theme-dark .emoji-popup {
+    background: #1a1a2e;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+}
+
+.emoji-popup.active {
+    display: block;
+}
+
+@keyframes emojiSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.emoji-popup-header {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.theme-dark .emoji-popup-header {
+    color: rgba(255, 255, 255, 0.5);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+body.theme-light .emoji-popup-header {
+    color: rgba(0, 0, 0, 0.4);
+}
+
+.emoji-category {
+    margin-bottom: 10px;
+}
+
+.emoji-category-title {
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    opacity: 0.5;
+}
+
+.emoji-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 2px;
+}
+
+.emoji-item {
+    font-size: 22px;
+    padding: 4px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.15s ease;
+    user-select: none;
+    line-height: 1.3;
+}
+
+.emoji-item:hover {
+    background: rgba(237, 28, 36, 0.1);
+    transform: scale(1.3);
+}
+
+body.theme-dark .emoji-item:hover {
+    background: rgba(120, 100, 255, 0.2);
+}
+
+.emoji-search {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    font-size: 13px;
+    font-family: inherit;
+    margin-bottom: 10px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+body.theme-light .emoji-search {
+    background: rgba(0, 0, 0, 0.04);
+    color: #2d2d4a;
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.theme-dark .emoji-search {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.emoji-search:focus {
+    border-color: #ed1c24;
+}
+
+body.theme-dark .emoji-search:focus {
+    border-color: #7864ff;
+}
+
+@media (max-width: 480px) {
+    .emoji-popup {
+        width: 280px;
+        left: -40px;
+    }
+    
+    .emoji-grid {
+        grid-template-columns: repeat(7, 1fr);
+    }
+}
     </style>
 </head>
 <body class="theme-light locked">
@@ -2000,10 +2170,13 @@
                     <div class="author-input-wrapper">
                         <input type="text" class="author-input" id="authorInput1" placeholder="Ваше имя (необязательно — будет 'Аноним')">
                     </div>
-                    <div class="message-input-wrapper">
-                        <textarea class="message-input" id="messageInput1" placeholder="Напишите ваше пожелание или благодарность..."></textarea>
-                    </div>
-                    <button class="btn-send" data-chat="1">Отправить сообщение</button>
+                    <div class="emoji-input-row">
+    <div class="message-input-wrapper">
+        <textarea class="message-input" id="messageInput1" placeholder="Напишите ваше пожелание или благодарность..."></textarea>
+    </div>
+    <button class="emoji-btn" data-chat="1" title="Эмодзи">😊</button>
+</div>
+<button class="btn-send" data-chat="1">Отправить сообщение</button>
                 </div>
 
                 <div class="messages-divider"></div>
@@ -2043,10 +2216,13 @@
                     <div class="author-input-wrapper">
                         <input type="text" class="author-input" id="authorInput2" placeholder="Ваше имя (необязательно — будет 'Аноним')">
                     </div>
-                    <div class="message-input-wrapper">
-                        <textarea class="message-input" id="messageInput2" placeholder="Напишите ваше пожелание или благодарность..."></textarea>
-                    </div>
-                    <button class="btn-send" data-chat="2">Отправить сообщение</button>
+                   <div class="emoji-input-row">
+    <div class="message-input-wrapper">
+        <textarea class="message-input" id="messageInput1" placeholder="Напишите ваше пожелание или благодарность..."></textarea>
+    </div>
+    <button class="emoji-btn" data-chat="1" title="Эмодзи">😊</button>
+</div>
+<button class="btn-send" data-chat="1">Отправить сообщение</button>
                 </div>
 
                 <div class="messages-divider"></div>
@@ -2086,10 +2262,13 @@
                     <div class="author-input-wrapper">
                         <input type="text" class="author-input" id="authorInput3" placeholder="Ваше имя (необязательно — будет 'Аноним')">
                     </div>
-                    <div class="message-input-wrapper">
-                        <textarea class="message-input" id="messageInput3" placeholder="Напишите ваше пожелание или благодарность..."></textarea>
-                    </div>
-                    <button class="btn-send" data-chat="3">Отправить сообщение</button>
+                    <div class="emoji-input-row">
+    <div class="message-input-wrapper">
+        <textarea class="message-input" id="messageInput1" placeholder="Напишите ваше пожелание или благодарность..."></textarea>
+    </div>
+    <button class="emoji-btn" data-chat="1" title="Эмодзи">😊</button>
+</div>
+<button class="btn-send" data-chat="1">Отправить сообщение</button>
                 </div>
 
                 <div class="messages-divider"></div>
@@ -2102,7 +2281,35 @@
             </div>
         </div>
     </div>
-
+<!-- EMOJI POPUP -->
+<div class="emoji-popup" id="emojiPopup">
+    <input type="text" class="emoji-search" id="emojiSearch" placeholder="🔍 Поиск эмодзи...">
+    
+    <div class="emoji-category">
+        <div class="emoji-category-title">Часто используемые</div>
+        <div class="emoji-grid" id="emojiFrequent"></div>
+    </div>
+    
+    <div class="emoji-category">
+        <div class="emoji-category-title">Смайлики</div>
+        <div class="emoji-grid" id="emojiSmileys"></div>
+    </div>
+    
+    <div class="emoji-category">
+        <div class="emoji-category-title">Жесты</div>
+        <div class="emoji-grid" id="emojiGestures"></div>
+    </div>
+    
+    <div class="emoji-category">
+        <div class="emoji-category-title">Сердца</div>
+        <div class="emoji-grid" id="emojiHearts"></div>
+    </div>
+    
+    <div class="emoji-category">
+        <div class="emoji-category-title">Предметы</div>
+        <div class="emoji-grid" id="emojiObjects"></div>
+    </div>
+</div>
     <div class="toast" id="toast"></div>
 
 <script>
@@ -2635,6 +2842,114 @@
             e.preventDefault();
             showToast(tab.dataset.msg);
         });
+    });
+
+        // ===== EMOJI PICKER =====
+    const emojiData = {
+        frequent: ['😊', '😂', '❤️', '👍', '🙏', '😍', '🎉', '🔥', '💪', '👏', '✅', '⭐'],
+        smileys: ['😀', '😃', '😄', '😁', '😆', '😅', '🤣', '😂', '🙂', '😊', '😇', '🥰', '😍', '🤩', '😘', '😗', '😚', '😙', '🥲', '😋', '😛', '😜', '🤪', '😝', '🤑', '🤗', '🤭', '🤫', '🤔', '🫡', '🤐', '🤨', '😐', '😑', '😶', '🫥', '😏', '😒', '🙄', '😬', '😮‍💨', '🤥', '😌', '😔', '😪', '🤤', '😴', '😷', '🤒', '🤕', '🤢', '🤮', '🥵', '🥶', '🥴', '😵', '🤯', '🤠', '🥳', '🥸', '😎', '🤓', '🧐'],
+        gestures: ['👋', '🤚', '🖐️', '✋', '🖖', '🫱', '🫲', '🫳', '🫴', '👌', '🤌', '🤏', '✌️', '🤞', '🫰', '🤟', '🤘', '🤙', '👈', '👉', '👆', '🖕', '👇', '☝️', '🫵', '👍', '👎', '✊', '👊', '🤛', '🤜', '👏', '🙌', '🫶', '👐', '🤲', '🤝', '🙏', '💅', '🤳', '💪'],
+        hearts: ['❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❤️‍🔥', '❤️‍🩹', '❣️', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💟'],
+        objects: ['🎁', '🏆', '🥇', '🎖️', '📝', '📋', '📌', '📎', '✉️', '📧', '📱', '💻', '🖥️', '⏰', '📅', '🗓️', '🔔', '📢', '📣', '🔊', '💡', '🔋', '🔧', '⚙️', '🛡️', '⚖️', '🔑', '🏠', '🏢', '🏛️', '🎯', '🚀', '✨', '💫', '🌟', '⭐', '🎊', '🎉', '🎈', '🎀']
+    };
+
+    let currentEmojiTarget = null;
+    const emojiPopup = document.getElementById('emojiPopup');
+    const emojiSearch = document.getElementById('emojiSearch');
+
+    // Заполняем эмодзи
+    function fillEmojiGrid(containerId, emojis) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.innerHTML = '';
+        emojis.forEach(emoji => {
+            const item = document.createElement('span');
+            item.className = 'emoji-item';
+            item.textContent = emoji;
+            item.addEventListener('click', () => {
+                insertEmoji(emoji);
+            });
+            container.appendChild(item);
+        });
+    }
+
+    fillEmojiGrid('emojiFrequent', emojiData.frequent);
+    fillEmojiGrid('emojiSmileys', emojiData.smileys);
+    fillEmojiGrid('emojiGestures', emojiData.gestures);
+    fillEmojiGrid('emojiHearts', emojiData.hearts);
+    fillEmojiGrid('emojiObjects', emojiData.objects);
+
+    // Вставка эмодзи в textarea
+    function insertEmoji(emoji) {
+        if (!currentEmojiTarget) return;
+        const textarea = currentEmojiTarget;
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const text = textarea.value;
+        textarea.value = text.substring(0, start) + emoji + text.substring(end);
+        textarea.selectionStart = textarea.selectionEnd = start + emoji.length;
+        textarea.focus();
+    }
+
+    // Кнопки открытия emoji popup
+    document.querySelectorAll('.emoji-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const chatNum = btn.dataset.chat;
+            const textarea = document.getElementById('messageInput' + chatNum);
+            
+            if (!textarea) return;
+            
+            // Если popup уже открыт для этого чата — закрываем
+            if (emojiPopup.classList.contains('active') && currentEmojiTarget === textarea) {
+                emojiPopup.classList.remove('active');
+                currentEmojiTarget = null;
+                return;
+            }
+            
+            currentEmojiTarget = textarea;
+            
+            // Позиционируем popup рядом с кнопкой
+            const rect = btn.getBoundingClientRect();
+            emojiPopup.style.position = 'fixed';
+            emojiPopup.style.bottom = (window.innerHeight - rect.top + 10) + 'px';
+            emojiPopup.style.left = Math.max(10, rect.left - 140) + 'px';
+            emojiPopup.style.top = 'auto';
+            
+            emojiPopup.classList.add('active');
+            emojiSearch.value = '';
+            filterEmojis('');
+        });
+    });
+
+    // Поиск эмодзи
+    if (emojiSearch) {
+        emojiSearch.addEventListener('input', (e) => {
+            filterEmojis(e.target.value);
+        });
+    }
+
+    function filterEmojis(query) {
+        const allItems = emojiPopup.querySelectorAll('.emoji-item');
+        allItems.forEach(item => {
+            item.style.display = 'block';
+        });
+    }
+
+    // Закрытие popup при клике вне его
+    document.addEventListener('click', (e) => {
+        if (!emojiPopup.contains(e.target) && !e.target.classList.contains('emoji-btn')) {
+            emojiPopup.classList.remove('active');
+            currentEmojiTarget = null;
+        }
+    });
+
+    // Закрытие по Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            emojiPopup.classList.remove('active');
+            currentEmojiTarget = null;
+        }
     });
 </script>
 </body>
