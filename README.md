@@ -2160,7 +2160,6 @@ body.theme-dark .emoji-search:focus {
                             <div class="person-description">Председатель профсоюза. Более 15 лет защищает права работников. Активно участвует в решении трудовых споров и улучшении условий труда. Имеет высшее юридическое образование. Награждён почётными грамотами за многолетний добросовестный труд.</div>
                         </div>
                     </div>
-                    <button class="toggle-btn active" onclick="document.getElementById('infoSection1').classList.add('hidden-section'); document.getElementById('toggleInfo1').classList.remove('active'); document.getElementById('toggleInfo1').textContent='👤 Показать информацию о председателе'">Скрыть информацию</button>
                 </div>
 
                 <div class="chat-header">Пожелания и благодарности</div>
@@ -2209,7 +2208,6 @@ body.theme-dark .emoji-search:focus {
 <p>Стаж работы в профсоюзе - свыше 30 лет.</p></div>
                         </div>
                     </div>
-                    <button class="toggle-btn active" onclick="document.getElementById('infoSection2').classList.add('hidden-section'); document.getElementById('toggleInfo2').classList.remove('active'); document.getElementById('toggleInfo2').textContent='👤 Показать информацию о председателе'">Скрыть информацию</button>
                 </div>
 
                 <div class="chat-header">Пожелания и благодарности</div>
@@ -2255,7 +2253,6 @@ body.theme-dark .emoji-search:focus {
                             <div class="person-description">Член правления профсоюза. Отвечает за правовую защиту работников и ведение переговоров с администрацией. Опыт работы в сфере трудового права — более 12 лет. Кандидат юридических наук.</div>
                         </div>
                     </div>
-                    <button class="toggle-btn active" onclick="document.getElementById('infoSection3').classList.add('hidden-section'); document.getElementById('toggleInfo3').classList.remove('active'); document.getElementById('toggleInfo3').textContent='👤 Показать информацию'">Скрыть информацию</button>
                 </div>
 
                 <div class="chat-header">Пожелания и благодарности</div>
