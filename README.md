@@ -2203,7 +2203,10 @@ body.theme-dark .emoji-search:focus {
                 <div class="hidden-section" id="infoSection2">
                     <div class="person-card" style="margin-bottom: 16px;">
                         <div class="info-content">
-                            <div class="person-description">Заместитель председателя профсоюза. Курирует вопросы охраны труда и социальной защиты работников. Организует культурно-массовые мероприятия. Стаж работы в профсоюзе - 10 лет. Имеет благодарность от Федерации независимых профсоюзов России.</div>
+                            <div class="person-description">Председатель Профсоюза Управления Московского метрополитена.
+Ведёт правозащитную работу, решает трудовые споры. Имеет высшее юридическое образование. 
+Опыт работы в сфере трудового права - выше 20 лет
+Стаж работы в профсоюзе - свыше 30 лет</div>
                         </div>
                     </div>
                     <button class="toggle-btn active" onclick="document.getElementById('infoSection2').classList.add('hidden-section'); document.getElementById('toggleInfo2').classList.remove('active'); document.getElementById('toggleInfo2').textContent='👤 Показать информацию о председателе'">Скрыть информацию</button>
