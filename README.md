@@ -2062,6 +2062,154 @@ body.theme-dark .emoji-search:focus {
         grid-template-columns: repeat(7, 1fr);
     }
 }
+
+/* ===== НЕОНОВЫЕ ЧАСЫ И КАЛЕНДАРЬ ===== */
+.neon-clock,
+.neon-calendar {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 30px 40px;
+    border-radius: 20px;
+    background: rgba(10, 10, 26, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 2px solid;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+}
+
+/* Показываем только в тёмной теме */
+body.theme-dark .neon-clock,
+body.theme-dark .neon-calendar {
+    opacity: 1;
+}
+
+/* Часы слева */
+.neon-clock {
+    left: 60px;
+    border-color: rgba(120, 100, 255, 0.5);
+    box-shadow: 
+        0 0 20px rgba(120, 100, 255, 0.3),
+        0 0 40px rgba(120, 100, 255, 0.2),
+        inset 0 0 20px rgba(120, 100, 255, 0.1);
+    animation: neonPulse 3s ease-in-out infinite;
+}
+
+/* Календарь справа */
+.neon-calendar {
+    right: 60px;
+    border-color: rgba(100, 200, 255, 0.5);
+    box-shadow: 
+        0 0 20px rgba(100, 200, 255, 0.3),
+        0 0 40px rgba(100, 200, 255, 0.2),
+        inset 0 0 20px rgba(100, 200, 255, 0.1);
+    animation: neonPulse 3s ease-in-out infinite 1.5s;
+}
+
+@keyframes neonPulse {
+    0%, 100% {
+        box-shadow: 
+            0 0 20px rgba(120, 100, 255, 0.3),
+            0 0 40px rgba(120, 100, 255, 0.2),
+            inset 0 0 20px rgba(120, 100, 255, 0.1);
+    }
+    50% {
+        box-shadow: 
+            0 0 30px rgba(120, 100, 255, 0.5),
+            0 0 60px rgba(120, 100, 255, 0.3),
+            inset 0 0 30px rgba(120, 100, 255, 0.2);
+    }
+}
+
+body.theme-dark .neon-calendar {
+    animation-name: neonPulseCalendar;
+}
+
+@keyframes neonPulseCalendar {
+    0%, 100% {
+        box-shadow: 
+            0 0 20px rgba(100, 200, 255, 0.3),
+            0 0 40px rgba(100, 200, 255, 0.2),
+            inset 0 0 20px rgba(100, 200, 255, 0.1);
+    }
+    50% {
+        box-shadow: 
+            0 0 30px rgba(100, 200, 255, 0.5),
+            0 0 60px rgba(100, 200, 255, 0.3),
+            inset 0 0 30px rgba(100, 200, 255, 0.2);
+    }
+}
+
+/* Время */
+.neon-time {
+    font-size: 48px;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 
+        0 0 10px rgba(120, 100, 255, 0.8),
+        0 0 20px rgba(120, 100, 255, 0.6),
+        0 0 30px rgba(120, 100, 255, 0.4);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    font-family: 'Courier New', monospace;
+}
+
+/* День недели */
+.neon-date {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* День месяца */
+.neon-day {
+    font-size: 72px;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 
+        0 0 10px rgba(100, 200, 255, 0.8),
+        0 0 20px rgba(100, 200, 255, 0.6),
+        0 0 30px rgba(100, 200, 255, 0.4);
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+/* Месяц */
+.neon-month {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+}
+
+/* Год */
+.neon-year {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 1px;
+}
+
+/* Скрываем на мобильных и планшетах */
+@media (max-width: 1024px) {
+    .neon-clock,
+    .neon-calendar {
+        display: none;
+    }
+}
+
+/* Также скрываем в светлой теме */
+body.theme-light .neon-clock,
+body.theme-light .neon-calendar {
+    display: none;
+}
     </style>
 </head>
 <body class="theme-light locked">
@@ -2112,11 +2260,24 @@ body.theme-dark .emoji-search:focus {
     </header>
 
     <div class="description">
-        <div class="description-inner">
-            <h2>Добро пожаловать</h2>
-            <p>Здесь будет ваш текст с описанием страницы. Можете добавить его позже или попросить меня сгенерировать. Этот блок занимает весь экран и находится сразу после шапки.</p>
-        </div>
+    <!-- Часы слева -->
+    <div class="neon-clock" id="neonClock">
+        <div class="neon-time" id="neonTime">00:00:00</div>
+        <div class="neon-date" id="neonDate">Понедельник</div>
     </div>
+
+    <div class="description-inner">
+        <h2>Добро пожаловать</h2>
+        <p>Здесь будет ваш текст с описанием страницы. Можете добавить его позже или попросить меня сгенерировать. Этот блок занимает весь экран и находится сразу после шапки.</p>
+    </div>
+
+    <!-- Календарь справа -->
+    <div class="neon-calendar" id="neonCalendar">
+        <div class="neon-day" id="neonDay">01</div>
+        <div class="neon-month" id="neonMonth">Январь</div>
+        <div class="neon-year" id="neonYear">2024</div>
+    </div>
+</div>
 
     <div class="wave-divider">
         <svg viewBox="0 0 1440 150" preserveAspectRatio="none">
@@ -2951,6 +3112,59 @@ body.theme-dark .emoji-search:focus {
             currentEmojiTarget = null;
         }
     });
+
+    // ===== НЕОНОВЫЕ ЧАСЫ И КАЛЕНДАРЬ =====
+function updateNeonClock() {
+    const now = new Date();
+    
+    // Время
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const timeStr = `${hours}:${minutes}:${seconds}`;
+    
+    const timeElement = document.getElementById('neonTime');
+    if (timeElement) {
+        timeElement.textContent = timeStr;
+    }
+    
+    // День недели
+    const days = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+    const dayName = days[now.getDay()];
+    
+    const dateElement = document.getElementById('neonDate');
+    if (dateElement) {
+        dateElement.textContent = dayName;
+    }
+    
+    // День месяца
+    const day = String(now.getDate()).padStart(2, '0');
+    const dayElement = document.getElementById('neonDay');
+    if (dayElement) {
+        dayElement.textContent = day;
+    }
+    
+    // Месяц
+    const months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 
+                    'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+    const monthName = months[now.getMonth()];
+    
+    const monthElement = document.getElementById('neonMonth');
+    if (monthElement) {
+        monthElement.textContent = monthName;
+    }
+    
+    // Год
+    const year = now.getFullYear();
+    const yearElement = document.getElementById('neonYear');
+    if (yearElement) {
+        yearElement.textContent = year;
+    }
+}
+
+// Обновляем каждую секунду
+updateNeonClock();
+setInterval(updateNeonClock, 1000);
 </script>
 </body>
 </html>
