@@ -2069,8 +2069,8 @@ body.theme-dark .emoji-search:focus {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    padding: 30px 40px;
-    border-radius: 20px;
+    padding: 20px 25px;
+    border-radius: 16px;
     background: rgba(10, 10, 26, 0.6);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -2079,6 +2079,7 @@ body.theme-dark .emoji-search:focus {
     opacity: 0;
     transition: opacity 0.6s ease;
     pointer-events: none;
+    z-index: 1;
 }
 
 /* Показываем только в тёмной теме */
@@ -2087,9 +2088,9 @@ body.theme-dark .neon-calendar {
     opacity: 1;
 }
 
-/* Часы слева */
+/* Часы слева — дальше от центра */
 .neon-clock {
-    left: 60px;
+    left: 40px;
     border-color: rgba(120, 100, 255, 0.5);
     box-shadow: 
         0 0 20px rgba(120, 100, 255, 0.3),
@@ -2098,15 +2099,15 @@ body.theme-dark .neon-calendar {
     animation: neonPulse 3s ease-in-out infinite;
 }
 
-/* Календарь справа */
+/* Календарь справа — дальше от центра */
 .neon-calendar {
-    right: 60px;
+    right: 40px;
     border-color: rgba(100, 200, 255, 0.5);
     box-shadow: 
         0 0 20px rgba(100, 200, 255, 0.3),
         0 0 40px rgba(100, 200, 255, 0.2),
         inset 0 0 20px rgba(100, 200, 255, 0.1);
-    animation: neonPulse 3s ease-in-out infinite 1.5s;
+    animation: neonPulseCalendar 3s ease-in-out infinite 1.5s;
 }
 
 @keyframes neonPulse {
@@ -2122,10 +2123,6 @@ body.theme-dark .neon-calendar {
             0 0 60px rgba(120, 100, 255, 0.3),
             inset 0 0 30px rgba(120, 100, 255, 0.2);
     }
-}
-
-body.theme-dark .neon-calendar {
-    animation-name: neonPulseCalendar;
 }
 
 @keyframes neonPulseCalendar {
@@ -2145,7 +2142,7 @@ body.theme-dark .neon-calendar {
 
 /* Время */
 .neon-time {
-    font-size: 48px;
+    font-size: 36px;
     font-weight: 900;
     color: #fff;
     text-shadow: 
@@ -2153,13 +2150,13 @@ body.theme-dark .neon-calendar {
         0 0 20px rgba(120, 100, 255, 0.6),
         0 0 30px rgba(120, 100, 255, 0.4);
     letter-spacing: 2px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     font-family: 'Courier New', monospace;
 }
 
 /* День недели */
 .neon-date {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
     color: rgba(255, 255, 255, 0.7);
     text-transform: uppercase;
@@ -2168,7 +2165,7 @@ body.theme-dark .neon-calendar {
 
 /* День месяца */
 .neon-day {
-    font-size: 72px;
+    font-size: 56px;
     font-weight: 900;
     color: #fff;
     text-shadow: 
@@ -2181,7 +2178,7 @@ body.theme-dark .neon-calendar {
 
 /* Месяц */
 .neon-month {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     color: rgba(255, 255, 255, 0.8);
     text-transform: uppercase;
@@ -2191,14 +2188,14 @@ body.theme-dark .neon-calendar {
 
 /* Год */
 .neon-year {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
     color: rgba(255, 255, 255, 0.5);
     letter-spacing: 1px;
 }
 
-/* Скрываем на мобильных и планшетах */
-@media (max-width: 1024px) {
+/* Скрываем на планшетах и мобильных */
+@media (max-width: 1400px) {
     .neon-clock,
     .neon-calendar {
         display: none;
