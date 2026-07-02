@@ -9,6 +9,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <style>
+
+    
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
         * {
@@ -2112,6 +2114,23 @@ body.theme-dark .emoji-search:focus {
         grid-template-columns: repeat(7, 1fr);
     }
 }
+
+/* Скрываем мобильную ссылку на десктопе по умолчанию */
+.rospofzhel-link-mobile {
+    display: none !important;
+}
+
+/* В мобильной версии показываем только мобильную ссылку */
+@media (max-width: 768px) {
+    .rospofzhel-link-mobile {
+        display: block !important;
+    }
+    
+    .rospofzhel-link {
+        display: none !important;
+    }
+}
+
     </style>
 </head>
 <body class="theme-light locked">
