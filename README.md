@@ -365,6 +365,14 @@
             background: transparent !important;
         }
 
+        /* ===== ЛЕВАЯ ЧАСТЬ (ЛОГОТИП + ТЕМЫ) ===== */
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
         /* ===== ЛОГОТИП ===== */
         .logo-container {
             display: flex;
@@ -401,124 +409,6 @@
         body.theme-dark .logo-dark {
             display: block;
             opacity: 1;
-        }
-
-        /* ===== БУРГЕР-МЕНЮ ===== */
-        .burger {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            cursor: pointer;
-            padding: 10px;
-            z-index: 101;
-        }
-
-        .burger span {
-            width: 25px;
-            height: 3px;
-            border-radius: 3px;
-            transition: all 0.3s ease;
-        }
-
-        body.theme-light .burger span {
-            background: #2d2d4a;
-        }
-
-        body.theme-dark .burger span {
-            background: #fff;
-        }
-
-        .burger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(6px, 6px);
-        }
-
-        .burger.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .burger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(6px, -6px);
-        }
-
-        /* ===== НАВИГАЦИЯ ===== */
-        nav {
-            display: flex;
-            gap: 16px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        nav a {
-            text-decoration: none;
-            font-size: 15px;
-            font-weight: 700;
-            padding: 12px 26px;
-            border-radius: 50px;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative;
-            overflow: hidden;
-            letter-spacing: 0.3px;
-            cursor: pointer;
-        }
-
-        nav a::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.6s ease;
-        }
-
-        nav a:hover::before {
-            left: 100%;
-        }
-
-        nav a:hover {
-            transform: translateY(-3px) scale(1.05);
-        }
-
-        body.theme-light nav a {
-            color: #fff;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-        }
-
-        body.theme-light nav a.tab1 {
-            background: linear-gradient(135deg, #ed1c24 0%, #f7941d 100%);
-            box-shadow: 0 6px 20px rgba(237, 28, 36, 0.4);
-        }
-
-        body.theme-light nav a.tab2 {
-            background: linear-gradient(135deg, #f7941d 0%, #fbb03b 100%);
-            box-shadow: 0 6px 20px rgba(247, 148, 29, 0.4);
-        }
-
-        body.theme-light nav a.tab3 {
-            background: linear-gradient(135deg, #be1e2d 0%, #ed1c24 100%);
-            box-shadow: 0 6px 20px rgba(190, 30, 45, 0.4);
-        }
-
-        body.theme-dark nav a {
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
-        }
-
-        body.theme-dark nav a:nth-child(1) {
-            border-color: rgba(120, 100, 255, 0.4);
-            box-shadow: 0 0 15px rgba(120, 100, 255, 0.2);
-        }
-
-        body.theme-dark nav a:nth-child(2) {
-            border-color: rgba(100, 200, 255, 0.4);
-            box-shadow: 0 0 15px rgba(100, 200, 255, 0.2);
-        }
-
-        body.theme-dark nav a:nth-child(3) {
-            border-color: rgba(255, 130, 200, 0.4);
-            box-shadow: 0 0 15px rgba(255, 130, 200, 0.2);
         }
 
         /* ===== ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ ===== */
@@ -616,6 +506,177 @@
             filter: brightness(2.5) drop-shadow(0 0 5px rgba(255, 255, 255, 0.9)) !important;
         }
 
+        /* ===== ПРАВАЯ ЧАСТЬ (ССЫЛКИ) ===== */
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        /* ===== НАВИГАЦИЯ ===== */
+        nav {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 700;
+            padding: 12px 26px;
+            border-radius: 50px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+        }
+
+        nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s ease;
+        }
+
+        nav a:hover::before {
+            left: 100%;
+        }
+
+        nav a:hover {
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        body.theme-light nav a {
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        body.theme-light nav a.tab1 {
+            background: linear-gradient(135deg, #ed1c24 0%, #f7941d 100%);
+            box-shadow: 0 6px 20px rgba(237, 28, 36, 0.4);
+        }
+
+        body.theme-light nav a.tab2 {
+            background: linear-gradient(135deg, #f7941d 0%, #fbb03b 100%);
+            box-shadow: 0 6px 20px rgba(247, 148, 29, 0.4);
+        }
+
+        body.theme-light nav a.tab3 {
+            background: linear-gradient(135deg, #be1e2d 0%, #ed1c24 100%);
+            box-shadow: 0 6px 20px rgba(190, 30, 45, 0.4);
+        }
+
+        body.theme-dark nav a {
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+        }
+
+        body.theme-dark nav a:nth-child(1) {
+            border-color: rgba(120, 100, 255, 0.4);
+            box-shadow: 0 0 15px rgba(120, 100, 255, 0.2);
+        }
+
+        body.theme-dark nav a:nth-child(2) {
+            border-color: rgba(100, 200, 255, 0.4);
+            box-shadow: 0 0 15px rgba(100, 200, 255, 0.2);
+        }
+
+        body.theme-dark nav a:nth-child(3) {
+            border-color: rgba(255, 130, 200, 0.4);
+            box-shadow: 0 0 15px rgba(255, 130, 200, 0.2);
+        }
+
+        /* ===== ССЫЛКА НА РОСПРОФЖЕЛ ===== */
+        .rospofzhel-link {
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 700;
+            padding: 12px 26px;
+            border-radius: 50px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+            color: #fff !important;
+            box-shadow: 0 6px 20px rgba(196, 30, 58, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .rospofzhel-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .rospofzhel-link:hover::before {
+            left: 100%;
+        }
+
+        .rospofzhel-link:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(196, 30, 58, 0.6);
+        }
+
+        .rospofzhel-link::after {
+            content: '🔗';
+            font-size: 14px;
+        }
+
+        /* ===== БУРГЕР-МЕНЮ ===== */
+        .burger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 101;
+        }
+
+        .burger span {
+            width: 25px;
+            height: 3px;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        body.theme-light .burger span {
+            background: #2d2d4a;
+        }
+
+        body.theme-dark .burger span {
+            background: #fff;
+        }
+
+        .burger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .burger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .burger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
         /* ===== ОПИСАНИЕ ===== */
         .description {
             min-height: 100vh;
@@ -672,17 +733,16 @@
 
 .description p {
     font-size: 20px;
-    line-height: 1.4;  /* Было 1.8, уменьшаем */
+    line-height: 1.4;
     font-weight: 500;
     transition: all 0.6s ease;
-    margin-top: 0;  /* Убираем верхний отступ */
-    margin-bottom: 16px;  /* Уменьшаем нижний */
+    margin-top: 0;
+    margin-bottom: 16px;
 }
 
-/* Специально для "Добро пожаловать" */
 .description p:first-of-type {
-    font-size: 24px;  /* Чуть больше для приветствия */
-    margin-top: -4px;  /* Поднимаем ближе к заголовку */
+    font-size: 24px;
+    margin-top: -4px;
     margin-bottom: 20px;
 }
 
@@ -1600,40 +1660,78 @@
 
         @media (max-width: 768px) {
             .header-inner {
-                padding: 14px 20px;
-                gap: 12px;
+                padding: 12px 16px;
+                gap: 10px;
+            }
+
+            /* Левая часть - логотип + переключатель темы */
+            .header-left {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .logo {
+                height: 35px !important;
+            }
+
+            .theme-toggle {
+                width: 50px;
+                height: 28px;
+            }
+
+            .theme-toggle .toggle-knob {
+                width: 22px;
+                height: 22px;
+                font-size: 12px;
+            }
+
+            body.theme-dark .toggle-knob {
+                left: 25px;
+            }
+
+            /* Правая часть - только бургер */
+            .header-right {
+                margin-left: auto;
             }
 
             .burger {
                 display: flex;
+                padding: 8px;
             }
 
+            .burger span {
+                width: 28px;
+                height: 3px;
+            }
+
+            /* Навигация на весь экран */
             nav {
                 position: fixed;
                 top: 0;
                 right: -100%;
-                width: 70%;
-                max-width: 300px;
+                width: 85%;
+                max-width: 320px;
                 height: 100vh;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                gap: 20px;
-                transition: right 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+                gap: 16px;
+                transition: right 0.3s ease;
                 z-index: 99;
+                padding: 20px;
             }
 
             body.theme-light nav {
                 background: rgba(255, 255, 255, 0.98);
                 backdrop-filter: blur(20px);
-                box-shadow: -5px 0 30px rgba(237, 28, 36, 0.15);
-                border-left: 3px solid #ed1c24;
+                box-shadow: -5px 0 30px rgba(0, 0, 0, 0.15);
             }
 
             body.theme-dark nav {
-                background: rgba(10, 10, 26, 0.95);
+                background: rgba(10, 10, 26, 0.98);
                 backdrop-filter: blur(20px);
-                box-shadow: -5px 0 30px rgba(0, 0, 0, 0.3);
+                box-shadow: -5px 0 30px rgba(0, 0, 0, 0.5);
             }
 
             nav.active {
@@ -1642,201 +1740,72 @@
 
             nav a {
                 font-size: 16px;
-                padding: 14px 30px;
-                width: 80%;
+                padding: 14px 28px;
+                width: 90%;
                 text-align: center;
+                white-space: normal;
+                word-wrap: break-word;
             }
 
-            .theme-toggle {
-                width: 54px;
-                height: 30px;
+            /* Ссылка на Роспрофжел в мобильном меню */
+            .rospofzhel-link-mobile {
+                display: block;
+                width: 90%;
+                margin-top: 20px;
+                padding: 16px 28px;
+                font-size: 16px;
+                text-align: center;
+                background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+                color: #fff !important;
+                border-radius: 50px;
+                font-weight: 700;
+                text-decoration: none;
+                box-shadow: 0 6px 20px rgba(196, 30, 58, 0.4);
+                border: 2px solid rgba(255, 255, 255, 0.2);
+                animation: pulseHighlight 2s ease-in-out infinite;
             }
 
-            .theme-toggle .toggle-knob {
-                width: 24px;
-                height: 24px;
-                font-size: 14px;
+            @keyframes pulseHighlight {
+                0%, 100% {
+                    box-shadow: 0 6px 20px rgba(196, 30, 58, 0.4);
+                    transform: scale(1);
+                }
+                50% {
+                    box-shadow: 0 8px 30px rgba(196, 30, 58, 0.6);
+                    transform: scale(1.02);
+                }
             }
 
-            body.theme-dark .toggle-knob {
-                left: 27px;
+            /* Скрываем десктопную ссылку на мобильных */
+            .rospofzhel-link {
+                display: none;
             }
 
-            .logo {
-                height: 40px;
-            }
-
+            /* Описание */
             .description {
                 min-height: auto;
-                padding: 120px 15px 40px;
+                padding: 100px 16px 60px;
             }
 
             .description-inner {
                 max-width: 100% !important;
                 width: 100% !important;
-                padding: 30px 15px !important;
+                padding: 30px 20px !important;
             }
 
             .description h2 {
                 font-size: 28px;
-                margin-bottom: 8px;
-            }
-
-            .description p {
-                font-size: 15px;
-                line-height: 1.5;
-            }
-
-            .btn-start {
-                padding: 14px 36px;
-                font-size: 15px;
-            }
-
-            .department-selector {
-                padding: 40px 20px 60px;
-            }
-
-            .selector-card {
-                padding: 40px 25px !important;
-            }
-
-            .department-selector h2 {
-                font-size: 30px;
-            }
-
-            .department-selector .subtitle {
-                font-size: 15px;
-                margin-bottom: 30px;
-            }
-
-            select {
-                padding: 18px 20px;
-                font-size: 16px;
-            }
-
-            .btn-continue {
-                padding: 18px;
-                font-size: 16px;
-            }
-
-            .btn-back {
-                padding: 14px;
-                font-size: 14px;
-            }
-
-            .wave-divider {
-                height: 80px;
-            }
-
-            .chat-section {
-                padding: 90px 16px 40px;
-                min-height: 100vh;
-                max-width: 100%;
-            }
-
-            .chat-container {
-                grid-template-columns: 1fr;
-                padding: 20px;
-                gap: 16px;
-            }
-
-            .person-card {
-                padding: 20px;
-            }
-
-            .person-photo {
-                width: 100px;
-                height: 100px;
-                margin-bottom: 16px;
-            }
-
-            .person-name {
-                font-size: 18px;
-            }
-
-            .person-description {
-                font-size: 14px;
-            }
-
-            .chat-right {
-                display: flex;
-                flex-direction: column;
-            }
-
-            .chat-header {
-                font-size: 20px;
-            }
-
-            .message-input {
-                padding: 14px 16px;
-                font-size: 16px;
-                min-height: 80px;
-            }
-
-            .btn-send {
-                padding: 14px;
-                font-size: 15px;
-            }
-
-            .messages-list {
-                flex: 1;
                 margin-bottom: 12px;
             }
 
-            .message-item {
-                padding: 14px 16px;
-            }
-
-            .message-text {
-                font-size: 14px;
-            }
-
-            .info-content {
-                max-height: 250px;
-            }
-
-            .toast {
-                bottom: auto;
-                top: 80px;
-                padding: 12px 20px;
-                font-size: 13px;
-                max-width: 85%;
-            }
-            
-            .toast.show {
-                transform: translateX(-50%) translateY(0);
-            }
-            
-            .toast.hide {
-                transform: translateX(-50%) translateY(-100px);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .header-inner {
-                padding: 12px 16px;
-            }
-
-            nav {
-                width: 85%;
-            }
-
-            nav a {
-                font-size: 15px;
-                padding: 12px 24px;
-            }
-
-            .description h2 {
-                font-size: 26px;
-            }
-
             .description p {
-                font-size: 14px;
+                font-size: 15px;
+                line-height: 1.6;
             }
 
-            .btn-start {
-                padding: 14px 36px;
-                font-size: 15px;
+            /* Выбор подразделения */
+            .department-selector {
+                padding: 40px 16px 60px;
             }
 
             .selector-card {
@@ -1847,33 +1816,100 @@
                 font-size: 26px;
             }
 
-            .chat-container {
+            .department-selector .subtitle {
+                font-size: 14px;
+                margin-bottom: 24px;
+            }
+
+            select {
                 padding: 16px;
+                font-size: 15px;
+            }
+
+            .btn-continue,
+            .btn-back {
+                padding: 16px;
+                font-size: 15px;
+            }
+
+            /* Чаты */
+            .chat-section {
+                padding: 80px 12px 40px;
+            }
+
+            .chat-container {
+                grid-template-columns: 1fr;
+                padding: 16px;
+                gap: 16px;
             }
 
             .person-card {
-                padding: 16px;
+                padding: 20px;
             }
 
             .person-photo {
-                width: 90px;
-                height: 90px;
+                width: 100px;
+                height: 100px;
             }
 
             .person-name {
-                font-size: 17px;
+                font-size: 16px;
             }
 
             .chat-header {
                 font-size: 18px;
             }
 
-            .info-content {
-                max-height: 200px;
+            .message-input {
+                padding: 12px;
+                font-size: 14px;
+                min-height: 70px;
+            }
+
+            .btn-send {
+                padding: 14px;
+                font-size: 14px;
+            }
+
+            .toggle-btn {
+                padding: 12px;
+                font-size: 13px;
+            }
+
+            /* Toast на мобильных */
+            .toast {
+                bottom: auto;
+                top: 80px;
+                padding: 12px 16px;
+                font-size: 13px;
+                max-width: 90%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-inner {
+                padding: 10px 12px;
             }
 
             .logo {
-                height: 35px;
+                height: 30px !important;
+            }
+
+            nav a {
+                font-size: 15px;
+                padding: 12px 20px;
+            }
+
+            .description h2 {
+                font-size: 24px;
+            }
+
+            .description p {
+                font-size: 14px;
+            }
+
+            .department-selector h2 {
+                font-size: 22px;
             }
         }
 
@@ -2104,23 +2140,34 @@ body.theme-dark .emoji-search:focus {
 
     <header>
         <div class="header-inner">
-            <div class="logo-container">
-                <img src="https://raw.githubusercontent.com/Toast3493/Toast3493.github.io/main/logo-dark.png" alt="Логотип" class="logo logo-light">
-                <img src="https://raw.githubusercontent.com/Toast3493/Toast3493.github.io/main/logo-light.png" alt="Логотип" class="logo logo-dark">
+            <!-- ЛЕВАЯ ЧАСТЬ: ЛОГОТИП + ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ -->
+            <div class="header-left">
+                <div class="logo-container">
+                    <img src="https://raw.githubusercontent.com/Toast3493/Toast3493.github.io/main/logo-dark.png" alt="Логотип" class="logo logo-light">
+                    <img src="https://raw.githubusercontent.com/Toast3493/Toast3493.github.io/main/logo-light.png" alt="Логотип" class="logo logo-dark">
+                </div>
+                <div class="theme-toggle" id="themeToggle" title="Переключить тему">
+                    <div class="toggle-knob" id="toggleKnob">
+                        <span class="icon-sun">☀️</span>
+                        <span class="icon-moon">🌙</span>
+                    </div>
+                </div>
             </div>
-            <div class="burger" id="burger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            <nav id="nav">
-                <a id="navStart" class="tab1">ГУП "Московский метрополитен"</a>
-                <a class="tab2 fake-tab" data-msg="Скоро будет доступно ✨">ОАО "РЖД"</a>
-            </nav>
-            <div class="theme-toggle" id="themeToggle" title="Переключить тему">
-                <div class="toggle-knob" id="toggleKnob">
-                    <span class="icon-sun">☀️</span>
-                    <span class="icon-moon">🌙</span>
+
+            <!-- ПРАВАЯ ЧАСТЬ: ССЫЛКИ + БУРГЕР -->
+            <div class="header-right">
+                <nav id="nav">
+                    <a id="navStart" class="tab1">ГУП "Московский метрополитен"</a>
+                    <a class="tab2 fake-tab" data-msg="Скоро будет доступно ✨">ОАО "РЖД"</a>
+                    <!-- Ссылка на Роспрофжел для мобильных -->
+                    <a href="https://rosprofzhel.ru/" target="_blank" class="rospofzhel-link-mobile">🔗 Роспрофжел</a>
+                </nav>
+                <!-- Ссылка на Роспрофжел для десктопа -->
+                <a href="https://rosprofzhel.ru/" target="_blank" class="rospofzhel-link">Роспрофжел</a>
+                <div class="burger" id="burger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </div>
             </div>
         </div>
@@ -2862,11 +2909,11 @@ body.theme-dark .emoji-search:focus {
 
         // ===== EMOJI PICKER =====
     const emojiData = {
-        frequent: ['😊', '😂', '❤️', '👍', '🙏', '😍', '🎉', '🔥', '💪', '👏', '✅', '⭐'],
-        smileys: ['😀', '😃', '😄', '😁', '😆', '😅', '🤣', '😂', '🙂', '😊', '😇', '🥰', '😍', '🤩', '😘', '😗', '😚', '😙', '🥲', '😋', '😛', '😜', '🤪', '😝', '🤑', '🤗', '🤭', '🤫', '🤔', '🫡', '🤐', '🤨', '😐', '😑', '😶', '🫥', '😏', '😒', '🙄', '😬', '😮‍💨', '🤥', '😌', '😔', '😪', '🤤', '😴', '😷', '🤒', '🤕', '🤢', '🤮', '🥵', '🥶', '🥴', '😵', '🤯', '🤠', '🥳', '🥸', '😎', '🤓', '🧐'],
-        gestures: ['👋', '🤚', '🖐️', '✋', '🖖', '🫱', '🫲', '🫳', '🫴', '👌', '🤌', '🤏', '✌️', '🤞', '🫰', '🤟', '🤘', '🤙', '👈', '👉', '👆', '🖕', '👇', '☝️', '🫵', '👍', '👎', '✊', '👊', '🤛', '🤜', '👏', '🙌', '🫶', '👐', '🤲', '🤝', '🙏', '💅', '🤳', '💪'],
-        hearts: ['❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❤️‍🔥', '❤️‍🩹', '❣️', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💟'],
-        objects: ['🎁', '🏆', '🥇', '🎖️', '📝', '📋', '📌', '📎', '✉️', '📧', '📱', '💻', '🖥️', '⏰', '📅', '🗓️', '🔔', '📢', '📣', '🔊', '💡', '🔋', '🔧', '⚙️', '🛡️', '⚖️', '🔑', '🏠', '🏢', '🏛️', '🎯', '🚀', '✨', '💫', '🌟', '⭐', '🎊', '🎉', '🎈', '🎀']
+        frequent: ['😊', '😂', '❤️', '👍', '🙏', '', '🎉', '🔥', '💪', '👏', '✅', '⭐'],
+        smileys: ['😀', '😃', '😄', '😁', '😆', '😅', '🤣', '😂', '🙂', '😊', '😇', '🥰', '😍', '🤩', '', '😗', '', '😙', '', '😋', '😛', '😜', '🤪', '😝', '🤑', '🤗', '', '🤫', '🤔', '🫡', '', '🤨', '😐', '😑', '😶', '🫥', '😏', '😒', '🙄', '😬', '😮‍💨', '🤥', '😌', '😔', '😪', '🤤', '😴', '😷', '🤒', '🤕', '🤢', '🤮', '', '🥶', '🥴', '', '🤯', '🤠', '🥳', '🥸', '', '🤓', '🧐'],
+        gestures: ['👋', '🤚', '️', '✋', '🖖', '', '🫲', '🫳', '', '👌', '🤌', '🤏', '️', '🤞', '🫰', '🤟', '', '🤙', '👈', '👉', '', '🖕', '👇', '☝️', '🫵', '👍', '👎', '✊', '👊', '🤛', '🤜', '👏', '', '🫶', '👐', '🤲', '', '🙏', '💅', '🤳', '💪'],
+        hearts: ['❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '', '❤️🔥', '❤️‍🩹', '️', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💟'],
+        objects: ['🎁', '', '🥇', '🎖️', '📝', '📋', '📌', '', '✉️', '📧', '📱', '', '🖥️', '⏰', '📅', '🗓️', '🔔', '', '📣', '🔊', '💡', '🔋', '🔧', '⚙️', '🛡️', '⚖️', '🔑', '🏠', '🏢', '🏛️', '🎯', '🚀', '✨', '💫', '🌟', '⭐', '🎊', '🎉', '🎈', '🎀']
     };
 
     let currentEmojiTarget = null;
