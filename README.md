@@ -1659,7 +1659,7 @@
             .description-inner {
                 max-width: 100% !important;
                 width: 100% !important;
-                padding: 30px 15px !important;
+                padding: 30px !important;
             }
 
             .description h2 {
@@ -2114,7 +2114,7 @@ body.theme-dark .emoji-search:focus {
     <div class="description">
         <div class="description-inner">
             <h2>У каждой истории есть значение...</h2>
-            <p>Добро пожаловать!</p>
+            <p><font size=16px>Добро пожаловать!</font></p>
 <p>За каждым профсоюзом стоят не только документы, собрания и отчеты. Прежде всего — это люди, их поддержка, взаимопомощь и истории, которые остаются в памяти на всю жизнь.</p>
         </div>
     </div>
