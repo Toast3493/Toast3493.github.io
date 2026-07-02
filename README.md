@@ -1795,7 +1795,7 @@
             }
 
             .description h2 {
-                font-size: 28px;
+                font-size: 24px;
                 margin-bottom: 12px;
             }
 
