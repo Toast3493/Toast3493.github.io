@@ -651,7 +651,7 @@
         .description h2 {
             font-size: 56px;
             font-weight: 900;
-            margin-bottom: 24px;
+            margin-bottom: 12px;
             letter-spacing: -2px;
             transition: all 0.6s ease;
         }
@@ -1659,7 +1659,7 @@
             .description-inner {
                 max-width: 100% !important;
                 width: 100% !important;
-                padding: 30px !important;
+                padding: 30px 15px !important;
             }
 
             .description h2 {
