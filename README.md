@@ -651,7 +651,7 @@
         .description h2 {
             font-size: 56px;
             font-weight: 900;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             letter-spacing: -2px;
             transition: all 0.6s ease;
         }
@@ -670,12 +670,21 @@
             background-clip: text;
         }
 
-        .description p {
-            font-size: 20px;
-            line-height: 1.8;
-            font-weight: 500;
-            transition: all 0.6s ease;
-        }
+.description p {
+    font-size: 20px;
+    line-height: 1.4;  /* Было 1.8, уменьшаем */
+    font-weight: 500;
+    transition: all 0.6s ease;
+    margin-top: 0;  /* Убираем верхний отступ */
+    margin-bottom: 16px;  /* Уменьшаем нижний */
+}
+
+/* Специально для "Добро пожаловать" */
+.description p:first-of-type {
+    font-size: 24px;  /* Чуть больше для приветствия */
+    margin-top: -4px;  /* Поднимаем ближе к заголовку */
+    margin-bottom: 20px;
+}
 
         body.theme-light .description p {
             color: #2d2d4a;
@@ -2222,9 +2231,9 @@ body.theme-dark .emoji-search:focus {
     <div class="message-input-wrapper">
         <textarea class="message-input" id="messageInput1" placeholder="Напишите ваше пожелание или благодарность..."></textarea>
     </div>
-    <button class="emoji-btn" data-chat="1" title="Эмодзи">😊</button>
+    <button class="emoji-btn" data-chat="2" title="Эмодзи">😊</button>
 </div>
-<button class="btn-send" data-chat="1">Отправить сообщение</button>
+<button class="btn-send" data-chat="2">Отправить сообщение</button>
                 </div>
 
                 <div class="messages-divider"></div>
@@ -2267,9 +2276,9 @@ body.theme-dark .emoji-search:focus {
     <div class="message-input-wrapper">
         <textarea class="message-input" id="messageInput1" placeholder="Напишите ваше пожелание или благодарность..."></textarea>
     </div>
-    <button class="emoji-btn" data-chat="1" title="Эмодзи">😊</button>
+    <button class="emoji-btn" data-chat="3" title="Эмодзи">😊</button>
 </div>
-<button class="btn-send" data-chat="1">Отправить сообщение</button>
+<button class="btn-send" data-chat="3">Отправить сообщение</button>
                 </div>
 
                 <div class="messages-divider"></div>
