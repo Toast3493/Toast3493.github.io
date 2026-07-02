@@ -1664,7 +1664,7 @@
 
             .description h2 {
                 font-size: 28px;
-                margin-bottom: 16px;
+                margin-bottom: 8px;
             }
 
             .description p {
