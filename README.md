@@ -686,6 +686,12 @@
     margin-bottom: 20px;
 }
 
+.description .welcome-text {
+    margin-top: -8px !important;
+    margin-bottom: 16px !important;
+    line-height: 1.4 !important;
+}
+
         body.theme-light .description p {
             color: #2d2d4a;
         }
@@ -2123,7 +2129,7 @@ body.theme-dark .emoji-search:focus {
     <div class="description">
         <div class="description-inner">
             <h2>У каждой истории есть значение...</h2>
-            <p><font size=16px>Добро пожаловать!</font></p>
+            <p class="welcome-text"><font size=16px>Добро пожаловать!</font></p>
 <p>За каждым профсоюзом стоят не только документы, собрания и отчеты. Прежде всего — это люди, их поддержка, взаимопомощь и истории, которые остаются в памяти на всю жизнь.</p>
         </div>
     </div>
